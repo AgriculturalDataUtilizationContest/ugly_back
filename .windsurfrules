@@ -1,0 +1,94 @@
+1. Basic Settings
+Always respond in Korean when chatting, but write all guideline text in English.
+
+If Agent is set to Auto, print the current model name on the first line.
+
+Follow every user requirement exactly.
+
+Think step-by-step first; present detailed pseudocode before writing or changing code.
+
+Ask for confirmation before touching existing code.
+
+Produce correct, up-to-date, fully functional, secure, performant, efficient code—no TODOs, placeholders, or missing logic.
+
+Verify code thoroughly and include all required imports.
+
+Keep prose minimal; treat the user as an expert.
+
+Never mention knowledge cut-offs or give moral lectures.
+
+Split replies if one message cannot hold the full answer.
+
+2. Code Style & Structure
+Topic   Rule
+Packages   controller, service, repository, mapper, config, dto, domain(entity, enum)
+Naming   PascalCase for classes, camelCase for fields/methods, ALL_CAPS for constants
+DTO Policy   All external and inter-layer traffic uses DTOs. Use BaseDto as a parent and suffixes such as PostReq, PostRes, UpdateReq.
+Domain Exposure   Domain objects stay inside the service layer. Exception: Value Objects may be shared across bounded contexts if duplication clearly harms maintainability. Document each case.
+Delete Strategy   Default to soft delete with deleted_at timestamp. Exception: High-volume or non-regulated tables may use hard delete if performance or storage is critical; annotate the entity and document the rationale.
+HATEOAS   External/public REST APIs must return EntityModel<T>, CollectionModel<T>, or PagedModel<T> with links built via an assembler. Purely internal or read-only endpoints may opt-out to reduce overhead—state the reason in Javadoc.
+Helper Methods   Prefer small helpers over very long methods.
+
+3. Spring Boot Conventions
+Use Spring Boot starters, profiles, and @ConfigurationProperties.
+
+Apply constructor injection; no field injection.
+
+Centralise exceptions with @RestControllerAdvice. Register custom exceptions so the frontend never sees raw 500 errors.
+
+Swagger / OpenAPI:
+
+Add springdoc-openapi (preferred) or springfox-swagger to every project.
+
+Annotate each controller method with @Operation, @Parameter, @ApiResponse.
+
+Expose /v3/api-docs and /swagger-ui.html in all environments except production (spring.profiles.active check).
+
+Provide an openapi.yml file in /docs and keep it version-controlled.
+
+4. Validation Strategy
+Layer   Responsibility
+Controller   Trigger Bean Validation with @Valid.
+DTO   Field-level constraints (@NotNull, @Size, etc.).
+Domain   Business-rule invariants.
+
+5. Data Access & ORM
+Tool   When to Use
+MyBatis   Fine-tuned SQL, multi-join, performance tuning
+QueryDSL   Type-safe dynamic queries
+JPQL   Simple, domain-centric queries
+
+Use Flyway/Liquibase for schema migrations.
+
+MapStruct or manual mappers for Domain ↔ DTO conversion.
+
+6. Testing
+JUnit 5 + Spring Boot Test.
+
+MockMvc (MVC) / WebTestClient (WebFlux).
+
+@SpringBootTest for integration tests.
+
+Each new endpoint requires a .bru test in .bruno/.
+
+For HATEOAS endpoints, assert that all mandatory links exist.
+
+Target ≥ 70 % unit-test coverage; Pitest for mutation testing when feasible.
+
+7. Security
+Spring Security with stateless JWT.
+
+Method-level security via @PreAuthorize.
+
+Rate-limiting (e.g., Bucket4j) and CORS/CSRF policies defined in SecurityConfig.
+
+8. Performance & Observability
+Enable Spring Cache abstraction.
+
+Use @Async or reactive APIs for non-blocking flows.
+
+Index critical DB columns.
+
+Logging: SLF4J + Logback.
+
+Monitoring: Spring Boot Actuator + Prometheus/Grafana; distributed tracing with OpenTelemetry.
