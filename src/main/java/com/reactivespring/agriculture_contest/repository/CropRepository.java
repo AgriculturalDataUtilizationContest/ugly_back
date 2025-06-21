@@ -1,4 +1,7 @@
 package com.reactivespring.agriculture_contest.repository;
 
-public interface CropRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.reactivespring.agriculture_contest.entity.TbCrop;
+
+public interface CropRepository extends JpaRepository<TbCrop, String> {
 }
