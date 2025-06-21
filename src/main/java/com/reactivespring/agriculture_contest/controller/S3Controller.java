@@ -31,7 +31,7 @@ public class S3Controller {
                 return ResponseEntity.badRequest().body("업로드할 파일이 없습니다.");
             }
 
-            String uploadUrl = s3Service.uploadFiles(multipartFile, "likelion-study/");
+            String uploadUrl = s3Service.uploadFiles(multipartFile, bucket + "/");
             return ResponseEntity.ok(uploadUrl);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
