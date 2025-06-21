@@ -84,28 +84,13 @@ public class GlobalExceptionHandler {
         }
 
         if (ex instanceof IllegalArgumentException
-                || ex instanceof DuplicateEntityException
-                || ex instanceof DuplicateTagCodeException
-                || ex instanceof AlreadyExistException
-                || ex instanceof DataUpdateException
                 || ex instanceof MethodArgumentNotValidException
                 || ex instanceof HttpMessageNotReadableException
                 || ex instanceof MissingServletRequestParameterException
                 || ex instanceof ConstraintViolationException
                 || ex instanceof BindException
-                || ex instanceof ConversionFailedException
-                || ex instanceof TypeMismatchException
-        ) {
+                || ex instanceof ConversionFailedException) {
             return HttpStatus.BAD_REQUEST;
-        }
-
-        if (ex instanceof NotFoundException) {
-            return HttpStatus.NOT_FOUND;
-        }
-
-        if (ex instanceof UnauthorizedAccessException
-                || ex instanceof NoAuthorizationException) {
-            return HttpStatus.UNAUTHORIZED;
         }
 
         if (ex instanceof NoAuthenticatedException) {
@@ -120,7 +105,7 @@ public class GlobalExceptionHandler {
             return HttpStatus.METHOD_NOT_ALLOWED;
         }
 
-        if (ex instanceof org.springframework.web.multipart.MaxUploadSizeExceededException) {
+        if (ex instanceof MaxUploadSizeExceededException) {
             return HttpStatus.PAYLOAD_TOO_LARGE;
         }
 
