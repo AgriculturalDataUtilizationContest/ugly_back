@@ -54,7 +54,7 @@ public class CropDto {
     @Setter
     @Schema(description = "Base 들어올 때의 Res DTO")
     public static class BaseRes {
-        ArrayList<Integer> retailPrice;
+        ArrayList<Double> retailPrice;
         ArrayList<OtherCrop> otherCrops;
     }
 
@@ -63,6 +63,7 @@ public class CropDto {
     @Getter
     @Builder
     @Setter
+    @Schema(description = "Base 들어올 때의 Res DTO의 내부 속한 것들")
     public static class OtherCrop {
         public String cropEngName;
         public String cropKorName;
@@ -73,6 +74,7 @@ public class CropDto {
     @NoArgsConstructor
     @Getter
     @Builder
+    @Schema(description = "FAST API에게서 grain 과거 가격 정보 받아오는 Res DTO")
     public static class PastUglyRes {
         @JsonProperty("data")
         public ArrayList<PastUgly> data;
@@ -83,10 +85,11 @@ public class CropDto {
     @NoArgsConstructor
     @Getter
     @Builder
+    @Schema(description = "FAST API에게서 grain 과거 가격 정보 받아오는 Res DTO의 내부 속한 것들")
     public static class PastUgly {
         public LocalDate dt;
-        @JsonProperty("v_4") private int v4;
-        @JsonProperty("v_5") private int v5;
+        @JsonProperty("v_4") private double v4;
+        @JsonProperty("v_5") private double v5;
         @JsonProperty("decline_ratio") private double declineRatio;
         @JsonProperty("ugly_cost") private double uglyCost;
     }
@@ -94,10 +97,54 @@ public class CropDto {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+    @Builder
+    @Schema(description = "V5를 받아오는 Res DTO")
     public static class V5Response {
         @JsonProperty("v_5")
         private Double v5;
     }
 
 
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Builder
+    @Setter
+    @Schema(description = "과거 가격 데이터 가져올 때, FE에게 받아오는 Res DTO")
+    public static class predictionPastReq {
+        public String cropName;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Builder
+    @Setter
+    @Schema(description = "과거 가격 데이터 가져올 때, FE에게 반환해줄 Req DTO")
+    public static class predictionPastRes {
+        ArrayList<retailPrice> retailPrice;
+        ArrayList<uglyPrice> uglyPrice;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Builder
+    @Setter
+    @Schema(description = "과거 가격 데이터 가져올 때, FE에게 반환해줄 Res DTO에 속해 있는 것")
+    public static class retailPrice {
+        public String date;
+        public double price;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @Setter
+    @AllArgsConstructor
+    @Builder
+    @Schema(description = "과거 가격 데이터 가져올 때, FE에게 반환해줄 Res DTO에 속해 있는 것")
+    public static class uglyPrice {
+        public String date;
+        public double price;
+    }
 }

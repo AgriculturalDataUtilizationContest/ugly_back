@@ -112,4 +112,35 @@ public class CropServiceImpl implements CropService {
         return restTemplate.getForEntity("http://localhost:8000/api/past_ugly/" + grainId, CropDto.PastUglyRes.class).getBody();
     }
 
+    @Override
+    public CropDto.predictionPastRes predictionPast(CropDto.predictionPastReq pastUglyReq) {
+
+        CropDto.PastUglyRes data = getPastUgly(cropRepository.findByCropKorName(pastUglyReq.getCropName()).getCropId());
+
+        ArrayList<CropDto.retailPrice> retailPrices = new ArrayList<>();
+        ArrayList<CropDto.uglyPrice> uglyCosts = new ArrayList<>();
+
+        int cnt = 0;
+        for (CropDto.PastUgly pastUgly : data.getData()) {
+            if(cnt==4) break;
+            retailPrices.add(
+                    CropDto.retailPrice.builder()
+                            .price(pastUgly.getV5())
+                            .date(pastUgly.getDt().toString().substring(5))
+                            .build());
+
+            uglyCosts.add(
+                    CropDto.uglyPrice.builder()
+                            .price(pastUgly.getUglyCost())
+                            .date(pastUgly.getDt().toString().substring(5))
+                            .build());
+            cnt++;
+        }
+
+        return CropDto.predictionPastRes.builder()
+                .retailPrice(retailPrices)
+                .uglyPrice(uglyCosts)
+                .build();
+    }
+
 }
