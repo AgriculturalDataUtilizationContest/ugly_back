@@ -8,4 +8,5 @@ public interface CropService {
     CropDto.ForecastResDto  getForecastCropDetails(CropDto.ForecastReq forecastReq);
 
     CropDto.BaseRes getBaseCrops(CropDto.BaseReq baseReq);
+    CropDto.PastUglyRes getPastUgly(Integer grainId);
 }

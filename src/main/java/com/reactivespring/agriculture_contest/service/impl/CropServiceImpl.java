@@ -107,9 +107,9 @@ public class CropServiceImpl implements CropService {
             baseRes.getRetailPrice().add(ugly.getV5());
         }
         return baseRes;
-
     }
 
+    @Override
     public CropDto.PastUglyRes getPastUgly(Integer grainId) {
         return restTemplate.getForEntity("http://localhost:8000/api/past_ugly/" + grainId, CropDto.PastUglyRes.class).getBody();
     }
