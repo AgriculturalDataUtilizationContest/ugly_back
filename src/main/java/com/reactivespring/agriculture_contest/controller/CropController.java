@@ -23,8 +23,7 @@ public class CropController {
 
     @GetMapping("/predict/past")
     public ResponseEntity<CropDto.BaseRes> base(@RequestBody CropDto.BaseReq baseReq) {
-        cropService.getBaseCrops(baseReq);
-        return null;
+        return ResponseEntity.ok().body(cropService.getBaseCrops(baseReq));
     }
 
 }
