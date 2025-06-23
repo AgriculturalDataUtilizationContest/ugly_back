@@ -4,7 +4,6 @@ import com.reactivespring.agriculture_contest.dto.CropDto;
 import com.reactivespring.agriculture_contest.entity.TbCrop;
 import com.reactivespring.agriculture_contest.repository.CropRepository;
 import com.reactivespring.agriculture_contest.service.GrainV5Fetcher;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.reactivespring.agriculture_contest.service.CropService;
@@ -116,7 +115,7 @@ public class CropServiceImpl implements CropService {
     }
 
     @Override
-    public CropDto.predictionPastRes predictionPast(CropDto.predictionPastReq pastUglyReq) {
+    public CropDto.predictionPastRes predictionPast(CropDto.predictionReq pastUglyReq) {
         Integer cropId = getCropIdByName(pastUglyReq.getCropName());
         List<CropDto.PastUgly> pastData = getPastUgly(cropId).getData();
 

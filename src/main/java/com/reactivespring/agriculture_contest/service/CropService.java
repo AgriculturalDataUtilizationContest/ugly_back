@@ -2,13 +2,11 @@ package com.reactivespring.agriculture_contest.service;
 
 import com.reactivespring.agriculture_contest.dto.CropDto;
 
-import java.util.ArrayList;
-
 public interface CropService {
     CropDto.ForecastResDto  getForecastCropDetails(CropDto.ForecastReq forecastReq);
 
     CropDto.BaseRes getBaseCrops(CropDto.BaseReq baseReq);
     CropDto.PastUglyRes getPastUgly(Integer grainId);
 
-    CropDto.predictionPastRes predictionPast(CropDto.predictionPastReq pastUglyReq);
+    CropDto.predictionPastRes predictionPast(CropDto.predictionReq pastUglyReq);
 }

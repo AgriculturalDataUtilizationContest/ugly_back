@@ -111,8 +111,7 @@ public class CropDto {
     @Getter
     @Builder
     @Setter
-    @Schema(description = "과거 가격 데이터 가져올 때, FE에게 받아오는 Res DTO")
-    public static class predictionPastReq {
+    public static class predictionReq {
         public String cropName;
     }
 

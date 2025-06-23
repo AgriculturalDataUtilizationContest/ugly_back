@@ -27,7 +27,7 @@ public class CropController {
     }
 
     @GetMapping("/prediction/past")
-    public ResponseEntity<CropDto.predictionPastRes>predictionPast(@RequestBody CropDto.predictionPastReq pastUglyReq) {
+    public ResponseEntity<CropDto.predictionPastRes>predictionPast(@RequestBody CropDto.predictionReq pastUglyReq) {
         return ResponseEntity.ok().body(cropService.predictionPast(pastUglyReq));
     }
 
