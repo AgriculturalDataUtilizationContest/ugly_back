@@ -7,5 +7,5 @@ import java.util.ArrayList;
 public interface CropService {
     CropDto.ForecastResDto  getForecastCropDetails(CropDto.ForecastReq forecastReq);
 
-    CropDto.ForecastResDto getBaseCrops();
+    CropDto.BaseRes getBaseCrops(CropDto.BaseReq baseReq);
 }

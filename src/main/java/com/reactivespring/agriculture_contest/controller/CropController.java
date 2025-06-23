@@ -21,9 +21,9 @@ public class CropController {
         return ResponseEntity.ok().body(cropService.getForecastCropDetails(forecastReq));
     }
 
-    @GetMapping("/base")
+    @GetMapping("/predict/past")
     public ResponseEntity<CropDto.BaseRes> base(@RequestBody CropDto.BaseReq baseReq) {
-//        return ResponseEntity.ok().body(cropService.getBaseCrops());
+        cropService.getBaseCrops(baseReq);
         return null;
     }
 

@@ -1,8 +1,10 @@
 package com.reactivespring.agriculture_contest.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class CropDto {
@@ -64,7 +66,38 @@ public class CropDto {
     public static class OtherCrop {
         public String cropEngName;
         public String cropKorName;
-        public int cropCost;
+        public double cropCost;
     }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Builder
+    public static class  pastUglyRes {
+        @JsonProperty("data")
+        public ArrayList<pastUgly> data;
+    }
+
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Builder
+    public static class pastUgly {
+        public LocalDate dt;
+        @JsonProperty("v_4") private int v4;
+        @JsonProperty("v_5") private int v5;
+        @JsonProperty("decline_ratio") private double declineRatio;
+        @JsonProperty("ugly_cost") private double uglyCost;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class V5Response {
+        @JsonProperty("v_5")
+        private Double v5;
+    }
+
 
 }
