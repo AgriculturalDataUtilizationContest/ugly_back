@@ -17,8 +17,13 @@ public class CropController {
     private final CropService cropService;
 
     @GetMapping("/forecast")
-    public ResponseEntity<?> forecast(@RequestBody CropDto.ForecastReq forecastReq) {
-        cropService.getForecastCropDetails(forecastReq);
+    public ResponseEntity<CropDto.ForecastResDto> forecast(@RequestBody CropDto.ForecastReq forecastReq) {
+        return ResponseEntity.ok().body(cropService.getForecastCropDetails(forecastReq));
+    }
+
+    @GetMapping("/base")
+    public ResponseEntity<CropDto.BaseRes> base(@RequestBody CropDto.BaseReq baseReq) {
+//        return ResponseEntity.ok().body(cropService.getBaseCrops());
         return null;
     }
 

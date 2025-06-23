@@ -28,4 +28,9 @@ public class CropServiceImpl implements CropService {
         return forecastResDtos;
     }
 
+    @Override
+    public CropDto.ForecastResDto getBaseCrops() {
+        return null;
+    }
+
 }

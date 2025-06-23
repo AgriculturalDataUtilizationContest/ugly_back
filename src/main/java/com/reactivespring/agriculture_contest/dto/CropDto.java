@@ -15,6 +15,14 @@ public class CropDto {
         public String category;
     }
 
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Schema(description = "Forecast 창에 들어올 때의 Req DTO")
+    public static class BaseReq{
+        public String cropName;
+    }
+
 
     @AllArgsConstructor
     @NoArgsConstructor
@@ -31,9 +39,32 @@ public class CropDto {
     @NoArgsConstructor
     @Getter
     @Builder
+    @Schema(description = "Base부분에 들어올 Req DTO")
     public static class ForecastCropInfo{
         public String cropsName;
         public String cropsImage;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Builder
+    @Setter
+    @Schema(description = "Base 들어올 때의 Res DTO")
+    public static class BaseRes {
+        ArrayList<Integer> retailPrice;
+        ArrayList<OtherCrop> otherCrops;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Builder
+    @Setter
+    public static class OtherCrop {
+        public String cropEngName;
+        public String cropKorName;
+        public int cropCost;
     }
 
 }
