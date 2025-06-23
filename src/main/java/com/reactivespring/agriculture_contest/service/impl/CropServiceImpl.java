@@ -4,6 +4,7 @@ import com.reactivespring.agriculture_contest.dto.CropDto;
 import com.reactivespring.agriculture_contest.entity.TbCrop;
 import com.reactivespring.agriculture_contest.repository.CropRepository;
 import com.reactivespring.agriculture_contest.service.GrainV5Fetcher;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.reactivespring.agriculture_contest.service.CropService;
@@ -38,7 +39,7 @@ public class CropServiceImpl implements CropService {
 
         Integer grainId = cropRepository.findByCropName(baseReq.getCropName()).getCropId();
 
-        CropDto.pastUglyRes pastUglyRes = getPastUgly(grainId);
+        CropDto.PastUglyRes pastUglyRes = getPastUgly(grainId);
 
         CropDto.BaseRes baseRes = CropDto.BaseRes.builder()
                 .otherCrops(new ArrayList<>())
@@ -49,40 +50,68 @@ public class CropServiceImpl implements CropService {
 
     }
 
-    public CropDto.BaseRes setElement(CropDto.BaseRes baseRes, CropDto.pastUglyRes pastUglyRes, Integer grainId) {
+    private CropDto.BaseRes setElement(CropDto.BaseRes baseRes, CropDto.PastUglyRes pastUglyRes, Integer grainId) {
 
-        for (CropDto.pastUgly ugly : pastUglyRes.getData()) {
-            baseRes.getRetailPrice().add(ugly.getV5());
+        baseRes = addGrantIds(baseRes, pastUglyRes);
+
+        ArrayList<Integer> grainIds = getGrainIds(grainId, pastUglyRes, baseRes);
+
+        setGrainCostByV5(baseRes, grainIds);
+
+        return setBaseResOthersInfo(baseRes, grainIds);
+    }
+
+    private CropDto.BaseRes setBaseResOthersInfo(CropDto.BaseRes baseRes, ArrayList<Integer> grainIds) {
+        for (Integer grainIdItem : grainIds) {
+            TbCrop crop = cropRepository.findByGrainId(grainIdItem);
+            baseRes.getOtherCrops()
+                    .add(
+                            CropDto.OtherCrop.builder()
+                                    .cropEngName(crop.getCropEngName())
+                                    .cropKorName(crop.getCropKorName())
+                                    .cropCost(crop.getCropCost())
+                                    .build()
+                    );
         }
 
-        Iterable<TbCrop> cropsSameCategory = cropRepository.findByCategory(cropRepository.findByGrainId(grainId).getCategory());
-        ArrayList<Integer> grainIds = new ArrayList<>();
-        for (TbCrop crop : cropsSameCategory) {
-            grainIds.add(crop.getCropId());
-        }
+        return baseRes;
+    }
 
-        // 밑의 내용은 함수 하나 떼어내서 @Transactional로 묶어야 할 것 같음
+    @Transactional
+    public void setGrainCostByV5(CropDto.BaseRes baseRes, ArrayList<Integer> grainIds) {
         grainV5Fetcher.fetchAllV5(grainIds)
                 .doOnNext(map -> {
                     map.forEach((grant_id, v5) ->
                             cropRepository.findByGrainId(grant_id).setCropCost(v5));
                 })
                 .block();
-
-        for (Integer grainIdItem : grainIds) {
-            TbCrop crop = cropRepository.findByGrainId(grainIdItem);
-            baseRes.getOtherCrops().add(CropDto.OtherCrop.builder()
-                    .cropEngName(crop.getCropEngName())
-                    .cropKorName(crop.getCropKorName())
-                    .cropCost(crop.getCropCost())
-                    .build());
-        }
-
-        return baseRes;
     }
 
-    public CropDto.pastUglyRes getPastUgly(Integer grainId) {
-        return restTemplate.getForEntity("http://localhost:8000/api/past_ugly/" + grainId, CropDto.pastUglyRes.class).getBody();
+    private ArrayList<Integer> getGrainIds(Integer grainId, CropDto.PastUglyRes pastUglyRes, CropDto.BaseRes baseRes) {
+        for (CropDto.PastUgly ugly : pastUglyRes.getData()) {
+            baseRes.getRetailPrice().add(ugly.getV5());
+        }
+
+        Iterable<TbCrop> cropsSameCategory = cropRepository.findByCategory(cropRepository.findByGrainId(grainId).getCategory());
+
+        ArrayList<Integer> grainIds = new ArrayList<>();
+        for (TbCrop crop : cropsSameCategory) {
+            grainIds.add(crop.getCropId());
+        }
+
+        return grainIds;
+    }
+
+    private CropDto.BaseRes addGrantIds(CropDto.BaseRes baseRes, CropDto.PastUglyRes pastUglyRes) {
+        for (CropDto.PastUgly ugly : pastUglyRes.getData()) {
+            baseRes.getRetailPrice().add(ugly.getV5());
+        }
+        return baseRes;
+
+    }
+
+    public CropDto.PastUglyRes getPastUgly(Integer grainId) {
+        return restTemplate.getForEntity("http://localhost:8000/api/past_ugly/" + grainId, CropDto.PastUglyRes.class).getBody();
     }
 
 }

@@ -73,9 +73,9 @@ public class CropDto {
     @NoArgsConstructor
     @Getter
     @Builder
-    public static class  pastUglyRes {
+    public static class PastUglyRes {
         @JsonProperty("data")
-        public ArrayList<pastUgly> data;
+        public ArrayList<PastUgly> data;
     }
 
 
@@ -83,7 +83,7 @@ public class CropDto {
     @NoArgsConstructor
     @Getter
     @Builder
-    public static class pastUgly {
+    public static class PastUgly {
         public LocalDate dt;
         @JsonProperty("v_4") private int v4;
         @JsonProperty("v_5") private int v5;
