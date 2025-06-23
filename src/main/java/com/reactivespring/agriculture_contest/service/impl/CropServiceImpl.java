@@ -37,10 +37,9 @@ public class CropServiceImpl implements CropService {
     @Override
     public CropDto.BaseRes getBaseCrops(CropDto.BaseReq baseReq) {
 
-        Integer grainId = cropRepository.findByCropName(baseReq.getCropName()).getCropId();
+        Integer grainId = cropRepository.findByCropKorName(baseReq.getCropName()).getCropId();
 
         CropDto.PastUglyRes pastUglyRes = getPastUgly(grainId);
-
         CropDto.BaseRes baseRes = CropDto.BaseRes.builder()
                 .otherCrops(new ArrayList<>())
                 .retailPrice(new ArrayList<>())
@@ -63,7 +62,7 @@ public class CropServiceImpl implements CropService {
 
     private CropDto.BaseRes setBaseResOthersInfo(CropDto.BaseRes baseRes, ArrayList<Integer> grainIds) {
         for (Integer grainIdItem : grainIds) {
-            TbCrop crop = cropRepository.findByGrainId(grainIdItem);
+            TbCrop crop = cropRepository.findByCropId(grainIdItem);
             baseRes.getOtherCrops()
                     .add(
                             CropDto.OtherCrop.builder()
@@ -77,22 +76,21 @@ public class CropServiceImpl implements CropService {
         return baseRes;
     }
 
-    @Transactional
     public void setGrainCostByV5(CropDto.BaseRes baseRes, ArrayList<Integer> grainIds) {
         grainV5Fetcher.fetchAllV5(grainIds)
                 .doOnNext(map -> {
-                    map.forEach((grant_id, v5) ->
-                            cropRepository.findByGrainId(grant_id).setCropCost(v5));
+                    map.forEach((grainId, v5) -> {
+                        TbCrop crop = cropRepository.findByCropId(grainId);
+                        crop.setCropCost(v5);
+                        cropRepository.save(crop);
+                    });
                 })
                 .block();
     }
 
     private ArrayList<Integer> getGrainIds(Integer grainId, CropDto.PastUglyRes pastUglyRes, CropDto.BaseRes baseRes) {
-        for (CropDto.PastUgly ugly : pastUglyRes.getData()) {
-            baseRes.getRetailPrice().add(ugly.getV5());
-        }
 
-        Iterable<TbCrop> cropsSameCategory = cropRepository.findByCategory(cropRepository.findByGrainId(grainId).getCategory());
+        Iterable<TbCrop> cropsSameCategory = cropRepository.findByCategory(cropRepository.findByCropId(grainId).getCategory());
 
         ArrayList<Integer> grainIds = new ArrayList<>();
         for (TbCrop crop : cropsSameCategory) {

@@ -22,13 +22,13 @@ public class GrainV5FetcherImpl implements GrainV5Fetcher {
     @Override
     public Mono<Map<Integer, Double>> fetchAllV5(List<Integer> grainIds) {
         return Flux.fromIterable(grainIds)
-                .flatMap(grainId ->
+                .flatMap(grain_id ->
                         webClient.get()
-                                .uri("/today_v5/{grainId}", grainId)
+                                .uri("/api/today_v5/{grainId}", grain_id)
                                 .retrieve()
                                 .bodyToMono(CropDto.V5Response.class)
-                                .map(res -> Map.entry(grainId, res.getV5()))
-                                .onErrorReturn(Map.entry(grainId, -1.0)) // 실패 시 -1.0 반환 -> 확인이 용이
+                                .map(res -> Map.entry(grain_id, res.getV5()))
+                                .onErrorReturn(Map.entry(grain_id, -1.0)) // 실패 시 -1.0 반환 -> 확인이 용이
                 )
                 .collectMap(Map.Entry::getKey, Map.Entry::getValue);
     }
