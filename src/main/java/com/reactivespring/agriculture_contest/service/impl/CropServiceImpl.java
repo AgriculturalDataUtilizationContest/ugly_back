@@ -15,7 +15,9 @@ import org.springframework.http.HttpMethod;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -134,40 +136,52 @@ public class CropServiceImpl implements CropService {
     @Override
     public CropDto.predictionRes predictionFuture(CropDto.predictionReq pastUglyReq) {
         Integer cropId = getCropIdByName(pastUglyReq.getCropName());
+        List<CropDto.futurePredictionRes> predictions = fetchFuturePredictions(cropId);
 
-        ResponseEntity<List<CropDto.futurePredictionRes>> response =
-                restTemplate.exchange(
-                        "http://localhost:8000/api/future_calc/" + cropId,
-                        HttpMethod.GET,
-                        null,
-                        new ParameterizedTypeReference<List<CropDto.futurePredictionRes>>() {
-                        }
-                );
+        List<CropDto.retailPrice> retailPrices = mapToRetailPrices(predictions);
+        List<CropDto.uglyPrice> uglyPrices = mapToUglyPrices(predictions);
 
-        List<CropDto.futurePredictionRes> predictions = response.getBody();
-
-            List<CropDto.retailPrice> retailPrices = predictions.stream()
-                    .skip(1)
-                    .map(p -> CropDto.retailPrice.builder()
-                            .price(p.getPred())
-                            .date(formatToMonthDay(p.getDate()).toString())
-                            .build())
-                    .toList();
-
-            List<CropDto.uglyPrice> uglyPrices = predictions.stream()
-                    .skip(1)
-                    .map(p -> CropDto.uglyPrice.builder()
-                            .price(p.getUglyCost())
-                            .date(formatToMonthDay(p.getDate()).toString())
-                            .build())
-                    .toList();
-
-            return CropDto.predictionRes.builder()
-                    .retailPrice(retailPrices)
-                    .uglyPrice(uglyPrices)
-                    .build();
-
+        return buildPredictionRes(retailPrices, uglyPrices);
     }
+
+    private List<CropDto.futurePredictionRes> fetchFuturePredictions(Integer cropId) {
+        ResponseEntity<List<CropDto.futurePredictionRes>> response = restTemplate.exchange(
+                "http://localhost:8000/api/future_calc/" + cropId,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {}
+        );
+        return Optional.ofNullable(response.getBody()).orElse(Collections.emptyList());
+    }
+
+    private List<CropDto.retailPrice> mapToRetailPrices(List<CropDto.futurePredictionRes> predictions) {
+        return predictions.stream()
+                .skip(1)
+                .map(p -> CropDto.retailPrice.builder()
+                        .price(p.getPred())
+                        .date(formatToMonthDay(p.getDate()))
+                        .build())
+                .toList();
+    }
+
+    private List<CropDto.uglyPrice> mapToUglyPrices(List<CropDto.futurePredictionRes> predictions) {
+        return predictions.stream()
+                .skip(1)
+                .map(p -> CropDto.uglyPrice.builder()
+                        .price(p.getUglyCost())
+                        .date(formatToMonthDay(p.getDate()))
+                        .build())
+                .toList();
+    }
+
+    private CropDto.predictionRes buildPredictionRes(List<CropDto.retailPrice> retailPrices,
+                                                     List<CropDto.uglyPrice> uglyPrices) {
+        return CropDto.predictionRes.builder()
+                .retailPrice(retailPrices)
+                .uglyPrice(uglyPrices)
+                .build();
+    }
+
 
     private Integer getCropIdByName(String cropName) {
         return cropRepository.findByCropKorName(cropName).getCropId();
