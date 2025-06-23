@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 import com.reactivespring.agriculture_contest.service.CropService;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -114,33 +117,45 @@ public class CropServiceImpl implements CropService {
 
     @Override
     public CropDto.predictionPastRes predictionPast(CropDto.predictionPastReq pastUglyReq) {
+        Integer cropId = getCropIdByName(pastUglyReq.getCropName());
+        List<CropDto.PastUgly> pastData = getPastUgly(cropId).getData();
 
-        CropDto.PastUglyRes data = getPastUgly(cropRepository.findByCropKorName(pastUglyReq.getCropName()).getCropId());
-
-        ArrayList<CropDto.retailPrice> retailPrices = new ArrayList<>();
-        ArrayList<CropDto.uglyPrice> uglyCosts = new ArrayList<>();
-
-        int cnt = 0;
-        for (CropDto.PastUgly pastUgly : data.getData()) {
-            if(cnt==4) break;
-            retailPrices.add(
-                    CropDto.retailPrice.builder()
-                            .price(pastUgly.getV5())
-                            .date(pastUgly.getDt().toString().substring(5))
-                            .build());
-
-            uglyCosts.add(
-                    CropDto.uglyPrice.builder()
-                            .price(pastUgly.getUglyCost())
-                            .date(pastUgly.getDt().toString().substring(5))
-                            .build());
-            cnt++;
-        }
+        List<CropDto.retailPrice> retailPrices = extractRetailPrices(pastData, 4);
+        List<CropDto.uglyPrice> uglyPrices = extractUglyPrices(pastData, 4);
 
         return CropDto.predictionPastRes.builder()
                 .retailPrice(retailPrices)
-                .uglyPrice(uglyCosts)
+                .uglyPrice(uglyPrices)
                 .build();
     }
+
+    private Integer getCropIdByName(String cropName) {
+        return cropRepository.findByCropKorName(cropName).getCropId();
+    }
+
+    private List<CropDto.retailPrice> extractRetailPrices(List<CropDto.PastUgly> data, int limit) {
+        return data.stream()
+                .limit(limit)
+                .map(p -> CropDto.retailPrice.builder()
+                        .price(p.getV5())
+                        .date(formatToMonthDay(p.getDt()))
+                        .build())
+                .toList();
+    }
+
+    private List<CropDto.uglyPrice> extractUglyPrices(List<CropDto.PastUgly> data, int limit) {
+        return data.stream()
+                .limit(limit)
+                .map(p -> CropDto.uglyPrice.builder()
+                        .price(p.getUglyCost())
+                        .date(formatToMonthDay(p.getDt()))
+                        .build())
+                .toList();
+    }
+
+    private String formatToMonthDay(LocalDate date) {
+        return date.format(DateTimeFormatter.ofPattern("MM-dd"));
+    }
+
 
 }

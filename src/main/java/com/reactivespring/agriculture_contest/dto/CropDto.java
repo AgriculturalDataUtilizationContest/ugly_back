@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CropDto {
 
@@ -122,8 +123,8 @@ public class CropDto {
     @Setter
     @Schema(description = "과거 가격 데이터 가져올 때, FE에게 반환해줄 Req DTO")
     public static class predictionPastRes {
-        ArrayList<retailPrice> retailPrice;
-        ArrayList<uglyPrice> uglyPrice;
+        List<retailPrice> retailPrice;
+        List<uglyPrice> uglyPrice;
     }
 
     @AllArgsConstructor
