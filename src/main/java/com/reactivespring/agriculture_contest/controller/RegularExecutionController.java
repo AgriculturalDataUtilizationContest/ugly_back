@@ -21,4 +21,9 @@ public class RegularExecutionController {
         return ResponseEntity.ok(regularExecutionService.updateKamisData());
     }
 
+    @GetMapping("/update/pred/data")
+    public ResponseEntity<Void> updatePredData() {
+        return ResponseEntity.ok(regularExecutionService.updatePredData());
+    }
+
 }

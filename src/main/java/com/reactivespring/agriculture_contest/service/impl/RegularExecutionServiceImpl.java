@@ -15,9 +15,21 @@ public class RegularExecutionServiceImpl implements RegularExecutionService {
         this.webClient = webClient;
     }
 
+    @Override
     public Void updateKamisData() {
         webClient.get()
                 .uri("/api/kamis")
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+
+        return null;
+    }
+
+    @Override
+    public Void updatePredData() {
+        webClient.get()
+                .uri("/api/pred_all")
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();
