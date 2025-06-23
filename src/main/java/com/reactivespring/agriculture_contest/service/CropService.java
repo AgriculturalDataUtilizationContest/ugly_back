@@ -9,4 +9,6 @@ public interface CropService {
     CropDto.PastUglyRes getPastUgly(Integer grainId);
 
     CropDto.predictionRes predictionPast(CropDto.predictionReq pastUglyReq);
+
+    CropDto.predictionRes predictionFuture(CropDto.predictionReq pastUglyReq);
 }

@@ -27,11 +27,12 @@ public class CropController {
     }
 
     @GetMapping("/prediction/past")
-    public ResponseEntity<CropDto.predictionRes>predictionPast(@RequestBody CropDto.predictionReq pastUglyReq) {
+    public ResponseEntity<CropDto.predictionRes> predictionPast(@RequestBody CropDto.predictionReq pastUglyReq) {
         return ResponseEntity.ok().body(cropService.predictionPast(pastUglyReq));
     }
 
     @GetMapping("/prediction/future")
-    public ResponseEntity<CropDto.predictionRes>predictionFuture(@RequestBody CropDto.predictionReq pastUglyReq) {
-
+    public ResponseEntity<CropDto.predictionRes> predictionFuture(@RequestBody CropDto.predictionReq pastUglyReq) {
+        return ResponseEntity.ok().body(cropService.predictionFuture(pastUglyReq));
     }
+}

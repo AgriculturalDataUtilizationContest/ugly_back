@@ -68,7 +68,7 @@ public class CropDto {
     public static class OtherCrop {
         public String cropEngName;
         public String cropKorName;
-        public double cropCost;
+        public Double cropCost;
     }
 
     @AllArgsConstructor
@@ -134,7 +134,7 @@ public class CropDto {
     @Schema(description = "과거 가격 데이터 가져올 때, FE에게 반환해줄 Res DTO에 속해 있는 것")
     public static class retailPrice {
         public String date;
-        public double price;
+        public Double price;
     }
 
     @Getter
@@ -145,6 +145,24 @@ public class CropDto {
     @Schema(description = "과거 가격 데이터 가져올 때, FE에게 반환해줄 Res DTO에 속해 있는 것")
     public static class uglyPrice {
         public String date;
-        public double price;
+        public Double price;
     }
+
+
+    @Getter
+    @NoArgsConstructor
+    @Setter
+    @AllArgsConstructor
+    @Builder
+    @Schema(description = "FAST API에게 미래 가격 예측 받을 때 Res에 속해있는 DTO")
+    public static class futurePredictionRes {
+        private LocalDate date;
+
+        @JsonProperty("pred")
+        private Double pred;
+
+        @JsonProperty("pred_ugly")
+        private Double uglyCost;
+    }
+
 }

@@ -5,9 +5,12 @@ import com.reactivespring.agriculture_contest.entity.TbCrop;
 import com.reactivespring.agriculture_contest.repository.CropRepository;
 import com.reactivespring.agriculture_contest.service.GrainV5Fetcher;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.reactivespring.agriculture_contest.service.CropService;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.http.HttpMethod;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -128,6 +131,44 @@ public class CropServiceImpl implements CropService {
                 .build();
     }
 
+    @Override
+    public CropDto.predictionRes predictionFuture(CropDto.predictionReq pastUglyReq) {
+        Integer cropId = getCropIdByName(pastUglyReq.getCropName());
+
+        ResponseEntity<List<CropDto.futurePredictionRes>> response =
+                restTemplate.exchange(
+                        "http://localhost:8000/api/future_calc/" + cropId,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<List<CropDto.futurePredictionRes>>() {
+                        }
+                );
+
+        List<CropDto.futurePredictionRes> predictions = response.getBody();
+
+            List<CropDto.retailPrice> retailPrices = predictions.stream()
+                    .skip(1)
+                    .map(p -> CropDto.retailPrice.builder()
+                            .price(p.getPred())
+                            .date(formatToMonthDay(p.getDate()).toString())
+                            .build())
+                    .toList();
+
+            List<CropDto.uglyPrice> uglyPrices = predictions.stream()
+                    .skip(1)
+                    .map(p -> CropDto.uglyPrice.builder()
+                            .price(p.getUglyCost())
+                            .date(formatToMonthDay(p.getDate()).toString())
+                            .build())
+                    .toList();
+
+            return CropDto.predictionRes.builder()
+                    .retailPrice(retailPrices)
+                    .uglyPrice(uglyPrices)
+                    .build();
+
+    }
+
     private Integer getCropIdByName(String cropName) {
         return cropRepository.findByCropKorName(cropName).getCropId();
     }
@@ -153,7 +194,7 @@ public class CropServiceImpl implements CropService {
     }
 
     private String formatToMonthDay(LocalDate date) {
-        return date.format(DateTimeFormatter.ofPattern("MM-dd"));
+        return date.format(DateTimeFormatter.ofPattern("MM/dd"));
     }
 
 
