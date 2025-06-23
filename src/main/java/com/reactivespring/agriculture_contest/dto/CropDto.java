@@ -165,4 +165,29 @@ public class CropDto {
         private Double uglyCost;
     }
 
+
+    @Getter
+    @NoArgsConstructor
+    @Setter
+    @AllArgsConstructor
+    @Builder
+    @Schema(description = "마켓 플레이스에서 판매하는 것을 가져와서 추천해주는 부분의 Res DTO")
+    public static class recommendationRes {
+        public List<marketPlaceRes> marketPlaceResList; // List<marketPlaceRes>
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @Setter
+    @AllArgsConstructor
+    @Builder
+    @Schema(description = "마켓 플레이스 Res DTO의 내부 속한 것들")
+    public static class marketPlaceRes {
+        public String marketImage;
+        public String marketName;
+        public String marketReview;
+        public String marketUrl;
+        public String marketWxplaination;
+    }
+
 }
