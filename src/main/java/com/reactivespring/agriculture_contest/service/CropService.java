@@ -8,5 +8,5 @@ public interface CropService {
     CropDto.BaseRes getBaseCrops(CropDto.BaseReq baseReq);
     CropDto.PastUglyRes getPastUgly(Integer grainId);
 
-    CropDto.predictionPastRes predictionPast(CropDto.predictionReq pastUglyReq);
+    CropDto.predictionRes predictionPast(CropDto.predictionReq pastUglyReq);
 }

@@ -121,7 +121,7 @@ public class CropDto {
     @Builder
     @Setter
     @Schema(description = "과거 가격 데이터 가져올 때, FE에게 반환해줄 Req DTO")
-    public static class predictionPastRes {
+    public static class predictionRes {
         List<retailPrice> retailPrice;
         List<uglyPrice> uglyPrice;
     }

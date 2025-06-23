@@ -115,14 +115,14 @@ public class CropServiceImpl implements CropService {
     }
 
     @Override
-    public CropDto.predictionPastRes predictionPast(CropDto.predictionReq pastUglyReq) {
+    public CropDto.predictionRes predictionPast(CropDto.predictionReq pastUglyReq) {
         Integer cropId = getCropIdByName(pastUglyReq.getCropName());
         List<CropDto.PastUgly> pastData = getPastUgly(cropId).getData();
 
         List<CropDto.retailPrice> retailPrices = extractRetailPrices(pastData, 4);
         List<CropDto.uglyPrice> uglyPrices = extractUglyPrices(pastData, 4);
 
-        return CropDto.predictionPastRes.builder()
+        return CropDto.predictionRes.builder()
                 .retailPrice(retailPrices)
                 .uglyPrice(uglyPrices)
                 .build();
