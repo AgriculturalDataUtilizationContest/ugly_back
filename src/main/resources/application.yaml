@@ -5,9 +5,12 @@ spring:
   ai:
     openai:
       api-key: ${OPENAI_API_KEY:${OPENAI_API_KEY_DEFAULT}}
-      base-url: https://api.openai.com/v1
+      base-url: https://api.openai.com
       chat:
         model: gpt-4.1-nano
+        options:
+          temperature: 0.5
+          max-completion-tokens: 480
 
   jpa:
     hibernate:

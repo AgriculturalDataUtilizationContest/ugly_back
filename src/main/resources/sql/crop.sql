@@ -22,21 +22,21 @@ VALUES
 
 
 
-INSERT INTO tb_crop_summary (
-    id, crop_id, summary, deleted, created_at, updated_at
-) VALUES
-      (1, '151', NULL, 'N', NOW(), NOW()), -- 고구마
-      (2, '152', NULL, 'N', NOW(), NOW()), -- 감자
-      (3, '211', NULL, 'N', NOW(), NOW()), -- 배추
-      (4, '212', NULL, 'N', NOW(), NOW()), -- 양배추
-      (5, '214', NULL, 'N', NOW(), NOW()), -- 상추
-      (6, '221', NULL, 'N', NOW(), NOW()), -- 수박
-      (7, '222', NULL, 'N', NOW(), NOW()), -- 참외
-      (8, '224', NULL, 'N', NOW(), NOW()), -- 호박
-      (9, '226', NULL, 'N', NOW(), NOW()), -- 딸기
-      (10, '231', NULL, 'N', NOW(), NOW()), -- 무
-      (11, '245', NULL, 'N', NOW(), NOW()), -- 양파
-      (12, '246', NULL, 'N', NOW(), NOW()), -- 파
-      (13, '411', NULL, 'N', NOW(), NOW()), -- 사과
-      (14, '412', NULL, 'N', NOW(), NOW()), -- 배
-      (15, '415', NULL, 'N', NOW(), NOW()); -- 감귤
+# INSERT INTO tb_crop_summary (
+#     id, crop_id, summary, deleted, created_at, updated_at
+# ) VALUES
+#       (1, '151', NULL, 'N', NOW(), NOW()), -- 고구마
+#       (2, '152', NULL, 'N', NOW(), NOW()), -- 감자
+#       (3, '211', NULL, 'N', NOW(), NOW()), -- 배추
+#       (4, '212', NULL, 'N', NOW(), NOW()), -- 양배추
+#       (5, '214', NULL, 'N', NOW(), NOW()), -- 상추
+#       (6, '221', NULL, 'N', NOW(), NOW()), -- 수박
+#       (7, '222', NULL, 'N', NOW(), NOW()), -- 참외
+#       (8, '224', NULL, 'N', NOW(), NOW()), -- 호박
+#       (9, '226', NULL, 'N', NOW(), NOW()), -- 딸기
+#       (10, '231', NULL, 'N', NOW(), NOW()), -- 무
+#       (11, '245', NULL, 'N', NOW(), NOW()), -- 양파
+#       (12, '246', NULL, 'N', NOW(), NOW()), -- 파
+#       (13, '411', NULL, 'N', NOW(), NOW()), -- 사과
+#       (14, '412', NULL, 'N', NOW(), NOW()), -- 배
+#       (15, '415', NULL, 'N', NOW(), NOW()); -- 감귤

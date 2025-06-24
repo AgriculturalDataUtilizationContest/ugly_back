@@ -28,7 +28,8 @@ public class ChatServiceImpl implements ChatService {
                 // set prompt
                 String prompt = LocalDate.now()
                         + " 기준으로 한국 농산물 중 " + crop
-                        + "와 관련된 유통 구조 변화에 대해 요약해줘. 직거래, 산지 직송, 도매시장 등 중심으로.";
+                        + "와 관련된 유통 구조 변화에 대해 요약해줘. 직거래, 산지 직송, 도매시장 등 중심으로."
+                        + "토큰수가 250정도 다다르면, 그 문장을 마지막으로 마무리해줘! (중간에 문장이 끊기지 않도록!)";
 
                 // connect GPT API
                 String content = chatClient.prompt()
