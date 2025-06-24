@@ -7,10 +7,11 @@ spring:
       api-key: ${OPENAI_API_KEY:${OPENAI_API_KEY_DEFAULT}}
       base-url: https://api.openai.com/v1
       chat:
-        model: gpt-3.5-turbo
+        model: gpt-4.1-nano
 
   jpa:
     hibernate:
+#      ddl-auto: update
       ddl-auto: create-drop
     defer-datasource-initialization: true  # 여기 두어야 작동 잘 됨.
     show-sql: true
@@ -33,6 +34,12 @@ spring:
       data-locations:
         - classpath:/sql/crop.sql
 #        /resources/sql/crop.sql
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 50MB
 
 cloud:
   aws:
