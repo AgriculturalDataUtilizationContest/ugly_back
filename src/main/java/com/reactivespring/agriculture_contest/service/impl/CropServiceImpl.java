@@ -2,6 +2,7 @@ package com.reactivespring.agriculture_contest.service.impl;
 
 import com.reactivespring.agriculture_contest.dto.CropDto;
 import com.reactivespring.agriculture_contest.entity.TbCrop;
+import com.reactivespring.agriculture_contest.exception.type.NotFoundException;
 import com.reactivespring.agriculture_contest.naver.NaverClient;
 import com.reactivespring.agriculture_contest.repository.CropRepository;
 import com.reactivespring.agriculture_contest.repository.CropSummaryRepository;
@@ -17,10 +18,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +48,7 @@ public class CropServiceImpl implements CropService {
     @Override
     public CropDto.BaseRes getBaseCrops(CropDto.BaseReq baseReq) {
 
-        Integer grainId = cropRepository.findByCropKorName(baseReq.getCropName()).getCropId();
+        Integer grainId = cropRepository.findByCropKorName(baseReq.getCropName()).getCropId().describeConstable().orElseThrow(() -> new NotFoundException(baseReq.getCropName() + " not found"));
 
         CropDto.PastUglyRes pastUglyRes = getPastUgly(grainId);
         CropDto.BaseRes baseRes = CropDto.BaseRes.builder()
@@ -161,17 +160,20 @@ public class CropServiceImpl implements CropService {
                 .news(news)
                 .build();
 
+        System.out.println(issueCheckRes);
+
         return issueCheckRes;
     }
 
     private List<String> getNews(String cropName) {
         List<String> newsList = new ArrayList<>();
 
-        NaverClient.NaverSearchResponse resp = naverClient.searchNews(cropName, 10, 1, "sim");
+        NaverClient.NaverSearchResponse resp = naverClient.searchNews(cropName, 10, 1, "date");
 
-        resp.rss.getChannel().getItem().forEach(item -> {
-            newsList.add(item.getOriginallink());
-        });
+        newsList = resp.getItems().stream()
+                .map(NaverClient.NaverSearchResponse.Item::getOriginallink)
+                .filter(Objects::nonNull)     // null 보호
+                .collect(Collectors.toList());
 
         return newsList;
     }
@@ -182,7 +184,7 @@ public class CropServiceImpl implements CropService {
 
     //  issue는 매주 월 9시에 실행되어서 DB에 저장됨.
     private String getCropIssueByAI(String cropName) {
-        return cropSummaryRepository.findByCropId(cropRepository.findByCropKorName(cropName).getCropId()).getSummary();
+        return cropSummaryRepository.findByCropId(cropRepository.findByCropKorName(cropName).getCropId()).getSummary().describeConstable().orElseThrow(() -> new NotFoundException(cropName + "에 대한 이슈가 아직 등록되지 않았습니다. (chat GPT 재확인)"));
     }
 
     private List<CropDto.futurePredictionRes> fetchFuturePredictions(Integer cropId) {
@@ -225,7 +227,7 @@ public class CropServiceImpl implements CropService {
 
 
     private Integer getCropIdByName(String cropName) {
-        return cropRepository.findByCropKorName(cropName).getCropId();
+        return cropRepository.findByCropKorName(cropName).getCropId().describeConstable().orElseThrow(() -> new NotFoundException(cropName + "은 없는 작물입니다."));
     }
 
     private List<CropDto.retailPrice> extractRetailPrices(List<CropDto.PastUgly> data, int limit) {

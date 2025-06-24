@@ -45,7 +45,6 @@ public class CropController {
 
     @GetMapping("/issue")
     public ResponseEntity<CropDto.issueCheckRes> issueCheck(@RequestBody CropDto.predictionReq issueCheckReq) {
-        cropService.issueCheck(issueCheckReq);
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body(cropService.issueCheck(issueCheckReq));
     }
 }

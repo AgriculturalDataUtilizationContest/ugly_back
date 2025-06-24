@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collections;
 import java.util.List;
 
 // FeignClient는 interface로 선언하며, @FeignClient 어노테이션을 사용하여 Naver API와 통신할 수 있도록 설정합니다.
@@ -28,23 +29,14 @@ public interface NaverClient {
 //                                   @RequestHeader("X-Naver-Client-Secret") String clientSecret);
 
 
-    // JSON 응답 모델: 필요한 필드만
+    // json, xml 둘 다 있어서 헷갈렸..
+    @Data
     class NaverSearchResponse {
-        public Rss rss;
+        private List<Item> items = Collections.emptyList();
 
         @Data
-        public static class Rss {
-            public Channel channel;
-
-            @Data
-            public static class Channel {
-                public List<Item> item;
-
-                @Data
-                public static class Item {
-                    public String originallink;
-                }
-            }
+        public static class Item {
+            private String originallink;   // 원문 URL
         }
     }
 }

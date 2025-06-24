@@ -14,8 +14,8 @@ spring:
 
   jpa:
     hibernate:
-#      ddl-auto: update
-      ddl-auto: create-drop
+      ddl-auto: update
+#      ddl-auto: create-drop
     defer-datasource-initialization: true  # 여기 두어야 작동 잘 됨.
     show-sql: true
     properties:
@@ -31,12 +31,11 @@ spring:
     driver-class-name: ${DB_CLASSNAME:${DB_CLASSNAME_DEFAULT}}
     show-sql: true
 
-  sql:
-    init:
-      mode: always
-      data-locations:
-        - classpath:/sql/crop.sql
-#        /resources/sql/crop.sql
+#  sql:
+#    init:
+#      mode: always
+#      data-locations:
+#        - classpath:/sql/crop.sql
 
   servlet:
     multipart:
