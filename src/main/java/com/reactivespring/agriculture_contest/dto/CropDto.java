@@ -239,4 +239,27 @@ public class CropDto {
         public Double increaseRate;
         public String cropsImage;
     }
+
+    @Getter
+    @NoArgsConstructor
+    @Setter
+    @AllArgsConstructor
+    @Builder
+    @Schema(description = "현재 계절 별 crop들 담는 DTO")
+    public static class searchTwoRes {
+        List<searchCrop> cropList;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @Setter
+    @AllArgsConstructor
+    @Builder
+    public static class searchCrop {
+        public String cropName;
+        public String cropCategory;
+        public String cropsImage;
+        public Integer cropPrice;
+        public Double increaseRate;
+    }
 }

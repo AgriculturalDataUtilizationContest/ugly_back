@@ -20,4 +20,6 @@ public interface CropService {
     CropDto.comparisonPriceRes comparePrice(CropDto.predictionReq comparisonPriceReq);
 
     CropDto.comparisonCategoryRes compareCategory(CropDto.ForecastReq comparisonCategoryReq);
+
+    CropDto.searchTwoRes searchTwo();
 }

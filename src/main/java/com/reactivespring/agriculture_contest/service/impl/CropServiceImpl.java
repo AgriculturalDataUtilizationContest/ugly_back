@@ -2,9 +2,11 @@ package com.reactivespring.agriculture_contest.service.impl;
 
 import com.reactivespring.agriculture_contest.dto.CropDto;
 import com.reactivespring.agriculture_contest.entity.TbCrop;
+import com.reactivespring.agriculture_contest.entity.TbSeason;
 import com.reactivespring.agriculture_contest.exception.type.NotFoundException;
 import com.reactivespring.agriculture_contest.naver.NaverClient;
 import com.reactivespring.agriculture_contest.repository.CropRepository;
+import com.reactivespring.agriculture_contest.repository.CropSeasonRepository;
 import com.reactivespring.agriculture_contest.repository.CropSummaryRepository;
 import com.reactivespring.agriculture_contest.service.GrainV5Fetcher;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.http.HttpMethod;
 import org.jsoup.Jsoup;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,6 +35,7 @@ public class CropServiceImpl implements CropService {
     private final RestTemplate restTemplate;
     private final CropSummaryRepository cropSummaryRepository;
     private final NaverClient naverClient;
+    private final CropSeasonRepository cropSeasonRepository;
 
     @Override
     public CropDto.ForecastResDto getForecastCropDetails(CropDto.ForecastReq forecastReq) {
@@ -206,6 +210,46 @@ public class CropServiceImpl implements CropService {
                 });
 
         return comparisonCategoryRes;
+    }
+
+    @Override
+    public CropDto.searchTwoRes searchTwo() {
+        CropDto.searchTwoRes searchTwoRes = CropDto.searchTwoRes.builder()
+                .cropList(new ArrayList<>())
+                .build();
+
+        String currentSeason = getCurrentSeason();
+
+        cropSeasonRepository.findBySeason(currentSeason).forEach(crop -> {
+                    TbCrop tbCrop = cropRepository.findByCropId(crop.getCropId());
+                    var data = getPastUgly(tbCrop.getCropId()).getData();
+                    if (tbCrop != null) {
+                        CropDto.searchCrop searchCrop = CropDto.searchCrop.builder()
+                                .cropName(tbCrop.getCropKorName())
+                                .cropCategory(tbCrop.getCategory())
+                                .cropsImage(tbCrop.getCropsImage())
+                                .cropPrice((int) data.get(0).getUglyCost())
+                                .increaseRate(100 * (data.get(1).getUglyCost() / data.get(0).getUglyCost()))
+                                .build();
+                        searchTwoRes.getCropList().add(searchCrop);
+                    }
+                });
+
+
+        return searchTwoRes;
+    }
+
+    private String getCurrentSeason() {
+        var month = LocalDate.now().getMonth();
+        if(month == Month.DECEMBER || month == Month.JANUARY || month == Month.FEBRUARY) {
+            return "WINTER";
+        } else if(month == Month.MARCH || month == Month.APRIL || month == Month.MAY) {
+            return "SPRING";
+        } else if(month == Month.JUNE || month == Month.JULY || month == Month.AUGUST) {
+            return "SUMMER";
+        } else {
+            return "FALL";
+        }
     }
 
     private CropDto.PastUglyRes getCropsPastPrice(CropDto.predictionReq comparisonPriceReq) {
