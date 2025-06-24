@@ -190,4 +190,17 @@ public class CropDto {
         public String marketWxplaination;
     }
 
+
+    @Getter
+    @NoArgsConstructor
+    @Setter
+    @AllArgsConstructor
+    @Builder
+    @Schema(description = "Issue chceck해주는 부분의 Res DTO")
+    public static class issueCheckRes {
+        public String cropIssue;
+        public String wordCloud;  // wordCloud image url
+        public List<String> news;
+    }
+
 }

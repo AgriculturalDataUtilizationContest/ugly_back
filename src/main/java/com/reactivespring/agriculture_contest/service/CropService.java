@@ -11,4 +11,6 @@ public interface CropService {
     CropDto.predictionRes predictionPast(CropDto.predictionReq pastUglyReq);
 
     CropDto.predictionRes predictionFuture(CropDto.predictionReq pastUglyReq);
+
+    CropDto.issueCheckRes issueCheck(CropDto.predictionReq issueCheckReq);
 }

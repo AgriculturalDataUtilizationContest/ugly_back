@@ -42,4 +42,10 @@ public class CropController {
 //        return ResponseEntity.ok().body(cropService.recommendation(recommendationReq));
         return ResponseEntity.ok().body(null);
     }
+
+    @GetMapping("/issue")
+    public ResponseEntity<CropDto.issueCheckRes> issueCheck(@RequestBody CropDto.predictionReq issueCheckReq) {
+        cropService.issueCheck(issueCheckReq);
+        return ResponseEntity.ok().body(null);
+    }
 }

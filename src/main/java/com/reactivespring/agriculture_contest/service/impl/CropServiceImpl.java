@@ -144,6 +144,19 @@ public class CropServiceImpl implements CropService {
         return buildPredictionRes(retailPrices, uglyPrices);
     }
 
+    @Override
+    public CropDto.issueCheckRes issueCheck(CropDto.predictionReq issueCheckReq) {
+        String issue = getCropIssueByAI(issueCheckReq.getCropName());
+
+        return null;
+    }
+
+    private String getCropIssueByAI(String cropName) {
+        //  매주 월 9시에 실행되어서 DB에 저장됨.
+
+        return null;
+    }
+
     private List<CropDto.futurePredictionRes> fetchFuturePredictions(Integer cropId) {
         ResponseEntity<List<CropDto.futurePredictionRes>> response = restTemplate.exchange(
                 "http://localhost:8000/api/future_calc/" + cropId,
