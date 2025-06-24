@@ -24,12 +24,7 @@ public interface NaverClient {
                                    @RequestParam("display") Integer display,
                                    @RequestParam("start") Integer start,
                                    @RequestParam("sort") String sort);
-                                   // 밑의 것은 header로 전달하는 것!  -> config에서 채워주니까!
-//                                   @RequestHeader("X-Naver-Client-Id") String clientId,
-//                                   @RequestHeader("X-Naver-Client-Secret") String clientSecret);
 
-
-    // json, xml 둘 다 있어서 헷갈렸..
     @Data
     class NaverSearchResponse {
         private List<Item> items = Collections.emptyList();
@@ -37,6 +32,30 @@ public interface NaverClient {
         @Data
         public static class Item {
             private String originallink;   // 원문 URL
+        }
+    }
+
+    @GetMapping("/v1/search/shop.json")
+    NaverShopSearchResponse searchShop(
+            @RequestParam("query")   String  query         // 검색어
+    );
+
+    @Data
+    class NaverShopSearchResponse {
+        private Integer total;
+        private Integer start;
+        private Integer display;
+        private List<Item> items = java.util.Collections.emptyList();
+
+        @Data
+        public static class Item {
+            private String title;        // <b>태그</b> 포함 제목
+            private String link;         // 상품 링크
+            private String image;        // 섬네일
+            private Integer lprice;      // 최저가
+            private Integer hprice;      // 최고가
+            private String mallName;     // 쇼핑몰명
+            private String maker;        // 제조사 (필드 추가)
         }
     }
 }

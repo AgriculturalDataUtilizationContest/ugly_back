@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.reactivespring.agriculture_contest.service.CropService;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpMethod;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.jsoup.Jsoup;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -160,9 +160,31 @@ public class CropServiceImpl implements CropService {
                 .news(news)
                 .build();
 
-        System.out.println(issueCheckRes);
-
         return issueCheckRes;
+    }
+
+    @Override
+    public CropDto.recommendationRes recommendation(CropDto.predictionReq recommendationReq) {
+        CropDto.recommendationRes recommendationRes = getNaverRecommendation(recommendationReq.getCropName());
+        return recommendationRes;
+    }
+
+    private CropDto.recommendationRes getNaverRecommendation(String cropName) {
+        var resp = naverClient.searchShop(cropName);
+
+        List<CropDto.marketPlaceRes> markets = resp.getItems().stream()
+                .map(item -> CropDto.marketPlaceRes.builder()
+                        .marketName(Jsoup.parse(item.getTitle()).text() )
+                        .marketUrl(item.getLink())
+                        .marketImage(item.getImage())
+                        .marketReview(item.getMallName())
+                        .marketExplaination( String.format("최저가 %,d원", item.getLprice()) )
+                        .build())
+                .toList();
+
+        return CropDto.recommendationRes.builder()
+                .markets(markets)
+                .build();
     }
 
     private List<String> getNews(String cropName) {

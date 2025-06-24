@@ -36,11 +36,9 @@ public class CropController {
         return ResponseEntity.ok().body(cropService.predictionFuture(pastUglyReq));
     }
 
-    // 크롤링 해야할 듯 -> 이건 이슈 파야겠다.
     @GetMapping("/recommendation")
     public ResponseEntity<CropDto.recommendationRes> recommendation(@RequestBody CropDto.predictionReq recommendationReq) {
-//        return ResponseEntity.ok().body(cropService.recommendation(recommendationReq));
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body(cropService.recommendation(recommendationReq));
     }
 
     @GetMapping("/issue")
