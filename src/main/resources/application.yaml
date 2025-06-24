@@ -2,6 +2,13 @@ spring:
   config:
     import: optional:file:.env[.properties]
 
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:${OPENAI_API_KEY_DEFAULT}}
+      base-url: https://api.openai.com/v1
+      chat:
+        model: gpt-3.5-turbo
+
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -68,3 +75,5 @@ external:
 cors:
   allowed-origins: >
     ${FE_URL}, ${BE_URL}
+
+
