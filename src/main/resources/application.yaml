@@ -14,8 +14,8 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
-#      ddl-auto: create-drop
+#      ddl-auto: update
+      ddl-auto: create-drop
     defer-datasource-initialization: true  # 여기 두어야 작동 잘 됨.
     show-sql: true
     properties:
