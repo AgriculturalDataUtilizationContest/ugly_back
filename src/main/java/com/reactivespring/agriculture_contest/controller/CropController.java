@@ -50,4 +50,9 @@ public class CropController {
     public ResponseEntity<CropDto.comparisonPriceRes> comparisonPrice(@RequestBody CropDto.predictionReq comparisonPriceReq) {
         return ResponseEntity.ok().body(cropService.comparePrice(comparisonPriceReq));
     }
+
+    @GetMapping("/comparison/category")
+    public ResponseEntity<CropDto.comparisonCategoryRes> comparisonCategory(@RequestBody CropDto.ForecastReq comparisonCategoryReq) {
+        return ResponseEntity.ok().body(cropService.compareCategory(comparisonCategoryReq));
+    }
 }

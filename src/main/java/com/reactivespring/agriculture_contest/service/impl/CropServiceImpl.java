@@ -174,10 +174,7 @@ public class CropServiceImpl implements CropService {
     @Override
     public CropDto.comparisonPriceRes comparePrice(CropDto.predictionReq comparisonPriceReq) {
 
-        var data = restTemplate.getForEntity(
-                "http://localhost:8000/api/past_ugly/{grain_id}",
-                        CropDto.PastUglyRes.class, cropRepository.findByCropKorName(comparisonPriceReq.getCropName()).getCropId()
-        ).getBody();
+        var data = getCropsPastPrice(comparisonPriceReq);
 
         // 금일 data
         var todayData = data.getData().get(0);
@@ -187,6 +184,35 @@ public class CropServiceImpl implements CropService {
                 .uglyPrice((int) todayData.getUglyCost())
                 .marketPrice((int) todayData.getV4())
                 .build();
+    }
+
+    @Override
+    public CropDto.comparisonCategoryRes compareCategory(CropDto.ForecastReq comparisonCategoryReq) {
+        CropDto.comparisonCategoryRes comparisonCategoryRes = CropDto.comparisonCategoryRes.builder()
+                .cropList(new ArrayList<>())
+                .build();
+
+        cropRepository.findByCategory(comparisonCategoryReq.getCategory())
+                .forEach(crop -> {
+                    var pastPriceData = getPastUgly(crop.getCropId()).getData();
+                    CropDto.comparisonCategory comparisonCategory = CropDto.comparisonCategory.builder()
+                            .cropName(crop.getCropKorName())
+                            .cropCategory(crop.getCategory())
+                            .cropPrice((int) pastPriceData.get(0).getUglyCost())
+                            .increaseRate(100 * (pastPriceData.get(1).getUglyCost() / pastPriceData.get(0).getUglyCost()))
+                            .cropsImage(crop.getCropsImage())
+                            .build();
+                    comparisonCategoryRes.getCropList().add(comparisonCategory);
+                });
+
+        return comparisonCategoryRes;
+    }
+
+    private CropDto.PastUglyRes getCropsPastPrice(CropDto.predictionReq comparisonPriceReq) {
+        return restTemplate.getForEntity(
+                "http://localhost:8000/api/past_ugly/{grain_id}",
+                CropDto.PastUglyRes.class, cropRepository.findByCropKorName(comparisonPriceReq.getCropName()).getCropId()
+        ).getBody();
     }
 
     private CropDto.recommendationRes getNaverRecommendation(String cropName) {

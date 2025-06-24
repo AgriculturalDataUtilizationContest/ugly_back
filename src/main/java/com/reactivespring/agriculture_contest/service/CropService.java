@@ -18,4 +18,6 @@ public interface CropService {
     CropDto.recommendationRes recommendation(CropDto.predictionReq recommendationReq);
 
     CropDto.comparisonPriceRes comparePrice(CropDto.predictionReq comparisonPriceReq);
+
+    CropDto.comparisonCategoryRes compareCategory(CropDto.ForecastReq comparisonCategoryReq);
 }

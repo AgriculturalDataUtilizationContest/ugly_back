@@ -216,4 +216,27 @@ public class CropDto {
         public Integer marketPrice;
 
     }
+
+    @Getter
+    @NoArgsConstructor
+    @Setter
+    @AllArgsConstructor
+    @Builder
+    @Schema(description = "카테고리에 속한 걸 가져오는 부분의 Res DTO")
+    public static class comparisonCategoryRes {
+        public List<comparisonCategory> cropList;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @Setter
+    @AllArgsConstructor
+    @Builder
+    public static class comparisonCategory {
+        public String cropName;
+        public String cropCategory;
+        public Integer cropPrice;
+        public Double increaseRate;
+        public String cropsImage;
+    }
 }
