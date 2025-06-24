@@ -239,6 +239,25 @@ public class CropServiceImpl implements CropService {
         return searchTwoRes;
     }
 
+//    @Override
+//    public CropDto.searchOneRes searchOne() {
+//        cropRepository.findAll().forEach(crop -> {
+//            TbCrop tbCrop = cropRepository.findByCropId(crop.getCropId());
+//            var data = getPastUgly(tbCrop.getCropId()).getData();
+//            if (tbCrop != null) {
+//                CropDto.searchOneCrop searchOne = CropDto.searchOneCrop.builder()
+//                        .cropKorName(tbCrop.getCropKorName())
+//                        .cropEngName(tbCrop.getCropEngName())
+//                        .cropsImage(tbCrop.getCropsImage())
+//                        .increaseRate(data.get(0).getDeclineRatio())
+//                        .build();
+//                return searchOne;
+//            }
+//        })
+//
+//        return null;
+//    }
+
     private String getCurrentSeason() {
         var month = LocalDate.now().getMonth();
         if(month == Month.DECEMBER || month == Month.JANUARY || month == Month.FEBRUARY) {

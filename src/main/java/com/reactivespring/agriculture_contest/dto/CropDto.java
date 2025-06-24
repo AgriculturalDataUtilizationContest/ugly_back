@@ -262,4 +262,26 @@ public class CropDto {
         public Integer cropPrice;
         public Double increaseRate;
     }
+
+//    @Getter
+//    @NoArgsConstructor
+//    @Setter
+//    @AllArgsConstructor
+//    @Builder
+//    @Schema(description = "특정 crop에 대한 정보 검색 결과 Res DTO")
+//    public class searchOneRes {
+//        List<searchOneCrop> cropList;
+//    }
+//
+//    @Getter
+//    @NoArgsConstructor
+//    @Setter
+//    @AllArgsConstructor
+//    @Builder
+//    public static class searchOneCrop {
+//        public String cropKorName;
+//        public String cropEngName;
+//        public String cropsImage;
+//        public Double increaseRate;
+//    }
 }

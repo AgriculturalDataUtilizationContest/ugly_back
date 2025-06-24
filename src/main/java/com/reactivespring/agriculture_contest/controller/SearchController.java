@@ -22,4 +22,9 @@ public class SearchController {
         return ResponseEntity.ok().body(cropService.searchTwo());
     }
 
+//    @GetMapping("/one")
+//    public ResponseEntity<CropDto.searchOneRes> searchOne () {
+//        return ResponseEntity.ok().body(cropService.searchOne());
+//    }
+
 }
