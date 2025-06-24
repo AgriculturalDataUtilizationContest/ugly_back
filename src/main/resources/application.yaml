@@ -14,8 +14,8 @@ spring:
 
   jpa:
     hibernate:
-#      ddl-auto: update
-      ddl-auto: create-drop
+      ddl-auto: update
+#      ddl-auto: create-drop
     defer-datasource-initialization: true  # 여기 두어야 작동 잘 됨.
     show-sql: true
     properties:
@@ -87,3 +87,10 @@ cors:
     ${FE_URL}, ${BE_URL}
 
 
+fastapi:
+  base-url: ${FASTAPI_URL}
+
+naver:
+  base-url: https://openapi.naver.com
+  client-id: ${NAVER_CLIENT_ID:${NAVER_CLIENT_ID_DEFAULT}}
+  client-secret: ${NAVER_CLIENT_SECRET:${NAVER_CLIENT_SECRET_DEFAULT}}

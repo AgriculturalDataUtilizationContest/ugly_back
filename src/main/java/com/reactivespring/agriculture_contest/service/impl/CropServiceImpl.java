@@ -2,6 +2,7 @@ package com.reactivespring.agriculture_contest.service.impl;
 
 import com.reactivespring.agriculture_contest.dto.CropDto;
 import com.reactivespring.agriculture_contest.entity.TbCrop;
+import com.reactivespring.agriculture_contest.naver.NaverClient;
 import com.reactivespring.agriculture_contest.repository.CropRepository;
 import com.reactivespring.agriculture_contest.repository.CropSummaryRepository;
 import com.reactivespring.agriculture_contest.service.GrainV5Fetcher;
@@ -29,6 +30,7 @@ public class CropServiceImpl implements CropService {
     private final GrainV5Fetcher grainV5Fetcher;
     private final RestTemplate restTemplate;
     private final CropSummaryRepository cropSummaryRepository;
+    private final NaverClient naverClient;
 
     @Override
     public CropDto.ForecastResDto getForecastCropDetails(CropDto.ForecastReq forecastReq) {
@@ -152,13 +154,26 @@ public class CropServiceImpl implements CropService {
         String cropIssue = getCropIssueByAI(issueCheckReq.getCropName());
         String wordCloud = getWordCloud(issueCheckReq.getCropName());
         List<String> news = getNews(issueCheckReq.getCropName());
-        return null;
+
+        CropDto.issueCheckRes issueCheckRes = CropDto.issueCheckRes.builder()
+                .cropIssue(cropIssue)
+                .wordCloud(wordCloud)
+                .news(news)
+                .build();
+
+        return issueCheckRes;
     }
 
     private List<String> getNews(String cropName) {
+        List<String> newsList = new ArrayList<>();
 
+        NaverClient.NaverSearchResponse resp = naverClient.searchNews(cropName, 10, 1, "sim");
 
-        return null;
+        resp.rss.getChannel().getItem().forEach(item -> {
+            newsList.add(item.getOriginallink());
+        });
+
+        return newsList;
     }
 
     private String getWordCloud(String cropName) {

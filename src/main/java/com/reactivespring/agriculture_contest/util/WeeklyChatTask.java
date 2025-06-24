@@ -1,4 +1,4 @@
-package com.reactivespring.agriculture_contest.config;
+package com.reactivespring.agriculture_contest.util;
 
 import com.reactivespring.agriculture_contest.service.ChatService;
 import org.springframework.scheduling.annotation.Scheduled;
