@@ -2,16 +2,14 @@ package com.reactivespring.agriculture_contest.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @ToString
+@Getter
 public class TbCropSummary extends AuditingFields {
 
     public Integer cropId;

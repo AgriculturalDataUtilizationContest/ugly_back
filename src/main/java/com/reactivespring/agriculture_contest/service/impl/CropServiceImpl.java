@@ -3,6 +3,7 @@ package com.reactivespring.agriculture_contest.service.impl;
 import com.reactivespring.agriculture_contest.dto.CropDto;
 import com.reactivespring.agriculture_contest.entity.TbCrop;
 import com.reactivespring.agriculture_contest.repository.CropRepository;
+import com.reactivespring.agriculture_contest.repository.CropSummaryRepository;
 import com.reactivespring.agriculture_contest.service.GrainV5Fetcher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.reactivespring.agriculture_contest.service.CropService;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -26,6 +28,7 @@ public class CropServiceImpl implements CropService {
     private final CropRepository cropRepository;
     private final GrainV5Fetcher grainV5Fetcher;
     private final RestTemplate restTemplate;
+    private final CropSummaryRepository cropSummaryRepository;
 
     @Override
     public CropDto.ForecastResDto getForecastCropDetails(CropDto.ForecastReq forecastReq) {
@@ -146,15 +149,25 @@ public class CropServiceImpl implements CropService {
 
     @Override
     public CropDto.issueCheckRes issueCheck(CropDto.predictionReq issueCheckReq) {
-        String issue = getCropIssueByAI(issueCheckReq.getCropName());
+        String cropIssue = getCropIssueByAI(issueCheckReq.getCropName());
+        String wordCloud = getWordCloud(issueCheckReq.getCropName());
+        List<String> news = getNews(issueCheckReq.getCropName());
+        return null;
+    }
+
+    private List<String> getNews(String cropName) {
+
 
         return null;
     }
 
-    private String getCropIssueByAI(String cropName) {
-        //  매주 월 9시에 실행되어서 DB에 저장됨.
+    private String getWordCloud(String cropName) {
+        return restTemplate.getForEntity("http://localhost:8000/api/generate?cropName=" + cropName, String.class).getBody();
+    }
 
-        return null;
+    //  issue는 매주 월 9시에 실행되어서 DB에 저장됨.
+    private String getCropIssueByAI(String cropName) {
+        return cropSummaryRepository.findByCropId(cropRepository.findByCropKorName(cropName).getCropId()).getSummary();
     }
 
     private List<CropDto.futurePredictionRes> fetchFuturePredictions(Integer cropId) {
