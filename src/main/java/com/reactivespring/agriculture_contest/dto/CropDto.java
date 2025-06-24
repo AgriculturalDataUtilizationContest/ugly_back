@@ -173,7 +173,7 @@ public class CropDto {
     @Builder
     @Schema(description = "마켓 플레이스에서 판매하는 것을 가져와서 추천해주는 부분의 Res DTO")
     public static class recommendationRes {
-        public List<marketPlaceRes> marketPlaceResList; // List<marketPlaceRes>
+        public List<marketPlaceRes> markets; // List<marketPlaceRes>
     }
 
     @Getter
@@ -187,7 +187,20 @@ public class CropDto {
         public String marketName;
         public String marketReview;
         public String marketUrl;
-        public String marketWxplaination;
+        public String marketExplaination;
+    }
+
+
+    @Getter
+    @NoArgsConstructor
+    @Setter
+    @AllArgsConstructor
+    @Builder
+    @Schema(description = "Issue chceck해주는 부분의 Res DTO")
+    public static class issueCheckRes {
+        public String cropIssue;
+        public String wordCloud;  // wordCloud image url
+        public List<String> news;
     }
 
 }

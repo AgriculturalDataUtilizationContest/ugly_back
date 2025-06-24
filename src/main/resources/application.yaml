@@ -2,9 +2,20 @@ spring:
   config:
     import: optional:file:.env[.properties]
 
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:${OPENAI_API_KEY_DEFAULT}}
+      base-url: https://api.openai.com
+      chat:
+        model: gpt-4.1-nano
+        options:
+          temperature: 0.5
+          max-completion-tokens: 480
+
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
+#      ddl-auto: create-drop
     defer-datasource-initialization: true  # 여기 두어야 작동 잘 됨.
     show-sql: true
     properties:
@@ -20,12 +31,17 @@ spring:
     driver-class-name: ${DB_CLASSNAME:${DB_CLASSNAME_DEFAULT}}
     show-sql: true
 
-  sql:
-    init:
-      mode: always
-      data-locations:
-        - classpath:/sql/crop.sql
-#        /resources/sql/crop.sql
+#  sql:
+#    init:
+#      mode: always
+#      data-locations:
+#        - classpath:/sql/crop.sql
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 50MB
 
 cloud:
   aws:
@@ -68,3 +84,12 @@ external:
 cors:
   allowed-origins: >
     ${FE_URL}, ${BE_URL}
+
+
+fastapi:
+  base-url: ${FASTAPI_URL}
+
+naver:
+  base-url: https://openapi.naver.com
+  client-id: ${NAVER_CLIENT_ID:${NAVER_CLIENT_ID_DEFAULT}}
+  client-secret: ${NAVER_CLIENT_SECRET:${NAVER_CLIENT_SECRET_DEFAULT}}

@@ -21,6 +21,5 @@ public class TbCrop extends AuditingFields {
     // 차후에 넣을 것
     @Setter private Double cropCost;
     @Setter private Double uglyCost;
-    private String cropDescription;
 
 }

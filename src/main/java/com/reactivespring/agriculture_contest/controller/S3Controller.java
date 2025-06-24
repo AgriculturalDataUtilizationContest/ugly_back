@@ -6,6 +6,7 @@ import com.reactivespring.agriculture_contest.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,8 +40,9 @@ public class S3Controller {
         }
     }
 
-    // 다중 파일 업로드 처리
-    @PostMapping("/images")
+    // it happens error.. hmm.. i don't know about it..
+    // reactive-spring confilct maybe..?
+    @PostMapping(value = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> updateUserImages(@RequestParam("images") MultipartFile[] multipartFiles) {
         if (multipartFiles == null || multipartFiles.length == 0) {
             return ResponseEntity.badRequest().body("업로드할 파일이 없습니다.");
@@ -52,7 +54,7 @@ public class S3Controller {
                 if (multipartFile == null) {
                     continue;
                 }
-                String uploadUrl = s3Service.uploadFiles(multipartFile, "likelion-study/");
+                String uploadUrl = s3Service.uploadFiles(multipartFile, bucket + "/");
                 uploadUrls.append(uploadUrl).append("\n");
             }
             return ResponseEntity.ok(uploadUrls.toString());

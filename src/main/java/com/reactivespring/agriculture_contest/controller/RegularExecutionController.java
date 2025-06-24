@@ -23,7 +23,7 @@ public class RegularExecutionController {
         return ResponseEntity.ok(regularExecutionService.updateKamisData());
     }
 
-    @Scheduled(cron = "0 10 0 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 25 0 * * *", zone = "Asia/Seoul")
     @GetMapping("/update/pred/data")
     public ResponseEntity<Void> updatePredData() {
         return ResponseEntity.ok(regularExecutionService.updatePredData());
