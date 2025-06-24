@@ -40,3 +40,21 @@ VALUES
 #       (13, '411', NULL, 'N', NOW(), NOW()), -- 사과
 #       (14, '412', NULL, 'N', NOW(), NOW()), -- 배
 #       (15, '415', NULL, 'N', NOW(), NOW()); -- 감귤
+
+
+INSERT INTO tb_season (id, crop_id, season, created_at, updated_at, deleted) VALUES
+                                                                                 (1 , '151', 'FALL'  , NOW(), NOW(), 'N'),  -- 고구마
+                                                                                 (2 , '152', 'SUMMER', NOW(), NOW(), 'N'),  -- 감자
+                                                                                 (3 , '211', 'FALL'  , NOW(), NOW(), 'N'),  -- 배추
+                                                                                 (4 , '212', 'SPRING', NOW(), NOW(), 'N'),  -- 양배추
+                                                                                 (5 , '214', 'SPRING', NOW(), NOW(), 'N'),  -- 상추
+                                                                                 (6 , '221', 'SUMMER', NOW(), NOW(), 'N'),  -- 수박
+                                                                                 (7 , '222', 'SPRING', NOW(), NOW(), 'N'),  -- 참외
+                                                                                 (8 , '224', 'SUMMER', NOW(), NOW(), 'N'),  -- 호박
+                                                                                 (9 , '226', 'WINTER', NOW(), NOW(), 'N'),  -- 딸기
+                                                                                 (10, '231', 'FALL'  , NOW(), NOW(), 'N'),  -- 무
+                                                                                 (11, '245', 'SUMMER', NOW(), NOW(), 'N'),  -- 양파
+                                                                                 (12, '246', 'SPRING', NOW(), NOW(), 'N'),  -- 파
+                                                                                 (13, '411', 'FALL'  , NOW(), NOW(), 'N'),  -- 사과
+                                                                                 (14, '412', 'FALL'  , NOW(), NOW(), 'N'),  -- 배
+                                                                                 (15, '415', 'WINTER', NOW(), NOW(), 'N');  -- 감귤
