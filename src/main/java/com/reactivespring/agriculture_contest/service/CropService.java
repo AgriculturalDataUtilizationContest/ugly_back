@@ -16,4 +16,6 @@ public interface CropService {
     CropDto.issueCheckRes issueCheck(CropDto.predictionReq issueCheckReq);
 
     CropDto.recommendationRes recommendation(CropDto.predictionReq recommendationReq);
+
+    CropDto.comparisonPriceRes comparePrice(CropDto.predictionReq comparisonPriceReq);
 }

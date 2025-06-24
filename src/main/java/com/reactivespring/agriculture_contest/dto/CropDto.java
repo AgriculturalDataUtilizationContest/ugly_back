@@ -203,4 +203,17 @@ public class CropDto {
         public List<String> news;
     }
 
+    @Getter
+    @NoArgsConstructor
+    @Setter
+    @AllArgsConstructor
+    @Builder
+    @Schema(description = "못난이와 상품 가격 비교를 위한 Res DTO")
+    public static class comparisonPriceRes {
+        public Integer difference;
+        public Integer discountRate;
+        public Integer uglyPrice;
+        public Integer marketPrice;
+
+    }
 }

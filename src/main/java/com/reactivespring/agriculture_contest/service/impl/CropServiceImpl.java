@@ -21,6 +21,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.lang.Math.abs;
+
 @Service
 @RequiredArgsConstructor
 public class CropServiceImpl implements CropService {
@@ -167,6 +169,24 @@ public class CropServiceImpl implements CropService {
     public CropDto.recommendationRes recommendation(CropDto.predictionReq recommendationReq) {
         CropDto.recommendationRes recommendationRes = getNaverRecommendation(recommendationReq.getCropName());
         return recommendationRes;
+    }
+
+    @Override
+    public CropDto.comparisonPriceRes comparePrice(CropDto.predictionReq comparisonPriceReq) {
+
+        var data = restTemplate.getForEntity(
+                "http://localhost:8000/api/past_ugly/{grain_id}",
+                        CropDto.PastUglyRes.class, cropRepository.findByCropKorName(comparisonPriceReq.getCropName()).getCropId()
+        ).getBody();
+
+        // 금일 data
+        var todayData = data.getData().get(0);
+        return CropDto.comparisonPriceRes.builder()
+                .difference((int) abs(todayData.getV5() - todayData.getUglyCost()))
+                .discountRate((int) (todayData.getUglyCost() - todayData.getV4()) / 100)
+                .uglyPrice((int) todayData.getUglyCost())
+                .marketPrice((int) todayData.getV4())
+                .build();
     }
 
     private CropDto.recommendationRes getNaverRecommendation(String cropName) {

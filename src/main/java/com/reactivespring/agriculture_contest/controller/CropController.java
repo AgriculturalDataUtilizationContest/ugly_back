@@ -45,4 +45,9 @@ public class CropController {
     public ResponseEntity<CropDto.issueCheckRes> issueCheck(@RequestBody CropDto.predictionReq issueCheckReq) {
         return ResponseEntity.ok().body(cropService.issueCheck(issueCheckReq));
     }
+
+    @GetMapping("/comparison/price")
+    public ResponseEntity<CropDto.comparisonPriceRes> comparisonPrice(@RequestBody CropDto.predictionReq comparisonPriceReq) {
+        return ResponseEntity.ok().body(cropService.comparePrice(comparisonPriceReq));
+    }
 }
