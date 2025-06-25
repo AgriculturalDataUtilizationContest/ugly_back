@@ -31,11 +31,11 @@ spring:
     driver-class-name: ${DB_CLASSNAME:${DB_CLASSNAME_DEFAULT}}
     show-sql: true
 
-#  sql:
-#    init:
-#      mode: always
-#      data-locations:
-#        - classpath:/sql/crop.sql
+  sql:
+    init:
+      mode: always
+      data-locations:
+        - classpath:/sql/crop.sql
 
   servlet:
     multipart:
