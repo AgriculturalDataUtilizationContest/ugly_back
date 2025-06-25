@@ -1,3 +1,4 @@
+# sql은 자동 실행이 아니라, 배포되면, 내가 sql 가서 넣어주는 걸로 할 듯.
 spring:
   config:
     import: optional:file:.env[.properties]
@@ -31,11 +32,11 @@ spring:
     driver-class-name: ${DB_CLASSNAME:${DB_CLASSNAME_DEFAULT}}
     show-sql: true
 
-  sql:
-    init:
-      mode: always
-      data-locations:
-        - classpath:/sql/crop.sql
+#  sql:
+#    init:
+#      mode: always
+#      data-locations:
+#        - classpath:/sql/crop.sql
 
   servlet:
     multipart:
