@@ -83,9 +83,7 @@ external:
       expiration-ms: 604800000   # 7?
 
 cors:
-  allowed-origins: >
-    ${FE_URL}, ${BE_URL}
-
+  allowed-origins: ${FE_URL},${BE_URL}
 
 fastapi:
   base-url: ${FASTAPI_URL}

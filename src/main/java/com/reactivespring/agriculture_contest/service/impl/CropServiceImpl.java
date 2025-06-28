@@ -2,7 +2,6 @@ package com.reactivespring.agriculture_contest.service.impl;
 
 import com.reactivespring.agriculture_contest.dto.CropDto;
 import com.reactivespring.agriculture_contest.entity.TbCrop;
-import com.reactivespring.agriculture_contest.entity.TbSeason;
 import com.reactivespring.agriculture_contest.exception.type.NotFoundException;
 import com.reactivespring.agriculture_contest.naver.NaverClient;
 import com.reactivespring.agriculture_contest.repository.CropRepository;
@@ -10,6 +9,7 @@ import com.reactivespring.agriculture_contest.repository.CropSeasonRepository;
 import com.reactivespring.agriculture_contest.repository.CropSummaryRepository;
 import com.reactivespring.agriculture_contest.service.GrainV5Fetcher;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -36,6 +36,9 @@ public class CropServiceImpl implements CropService {
     private final CropSummaryRepository cropSummaryRepository;
     private final NaverClient naverClient;
     private final CropSeasonRepository cropSeasonRepository;
+
+    @Value("${fastapi.base-url}")
+    public String fastApiBaseUrl;
 
     @Override
     public CropDto.ForecastResDto getForecastCropDetails(CropDto.ForecastReq forecastReq) {
@@ -126,7 +129,7 @@ public class CropServiceImpl implements CropService {
 
     @Override
     public CropDto.PastUglyRes getPastUgly(Integer grainId) {
-        return restTemplate.getForEntity("http://localhost:8000/api/past_ugly/" + grainId, CropDto.PastUglyRes.class).getBody();
+        return restTemplate.getForEntity(fastApiBaseUrl + "/pyapi/past_ugly/" + grainId, CropDto.PastUglyRes.class).getBody();
     }
 
     @Override
@@ -273,7 +276,7 @@ public class CropServiceImpl implements CropService {
 
     private CropDto.PastUglyRes getCropsPastPrice(CropDto.predictionReq comparisonPriceReq) {
         return restTemplate.getForEntity(
-                "http://localhost:8000/api/past_ugly/{grain_id}",
+                fastApiBaseUrl + "/pyapi/past_ugly/{grain_id}",
                 CropDto.PastUglyRes.class, cropRepository.findByCropKorName(comparisonPriceReq.getCropName()).getCropId()
         ).getBody();
     }
@@ -310,7 +313,7 @@ public class CropServiceImpl implements CropService {
     }
 
     private String getWordCloud(String cropName) {
-        return restTemplate.getForEntity("http://localhost:8000/api/generate?cropName=" + cropName, String.class).getBody();
+        return restTemplate.getForEntity(fastApiBaseUrl + "/pyapi/generate?cropName=" + cropName, String.class).getBody();
     }
 
     //  issue는 매주 월 9시에 실행되어서 DB에 저장됨.
@@ -320,7 +323,7 @@ public class CropServiceImpl implements CropService {
 
     private List<CropDto.futurePredictionRes> fetchFuturePredictions(Integer cropId) {
         ResponseEntity<List<CropDto.futurePredictionRes>> response = restTemplate.exchange(
-                "http://localhost:8000/api/future_calc/" + cropId,
+                fastApiBaseUrl + "/pyapi/future_calc/" + cropId,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<>() {}

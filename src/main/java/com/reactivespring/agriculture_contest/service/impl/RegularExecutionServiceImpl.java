@@ -18,7 +18,7 @@ public class RegularExecutionServiceImpl implements RegularExecutionService {
     @Override
     public Void updateKamisData() {
         webClient.get()
-                .uri("/api/kamis")
+                .uri("/pyapi/kamis")
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();
@@ -29,7 +29,7 @@ public class RegularExecutionServiceImpl implements RegularExecutionService {
     @Override
     public Void updatePredData() {
         webClient.get()
-                .uri("/api/pred_all")
+                .uri("/pyapi/pred_all")
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();
