@@ -39,7 +39,7 @@ public class ChatServiceImpl implements ChatService {
 
                 // save to database
                 TbCropSummary summary = TbCropSummary.builder()
-                        .cropId(cropRepository.findByCropKorName(crop).getCropId())
+                        .cropId(cropRepository.findByCropEngName(crop).getCropId())
                         .summary(content)
                         .build();
 

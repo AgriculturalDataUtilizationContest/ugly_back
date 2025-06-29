@@ -57,7 +57,7 @@ public class CropServiceImpl implements CropService {
     @Override
     public CropDto.BaseRes getBaseCrops(CropDto.BaseReq baseReq) {
 
-        Integer grainId = cropRepository.findByCropKorName(baseReq.getCropName()).getCropId().describeConstable().orElseThrow(() -> new NotFoundException(baseReq.getCropName() + " not found"));
+        Integer grainId = cropRepository.findByCropEngName(baseReq.getCropName()).getCropId().describeConstable().orElseThrow(() -> new NotFoundException(baseReq.getCropName() + " not found"));
 
         CropDto.PastUglyRes pastUglyRes = getPastUgly(grainId);
         CropDto.BaseRes baseRes = CropDto.BaseRes.builder()
@@ -89,6 +89,7 @@ public class CropServiceImpl implements CropService {
                                     .cropEngName(crop.getCropEngName())
                                     .cropKorName(crop.getCropKorName())
                                     .cropCost(crop.getCropCost())
+                                    .cropsImage(crop.getCropsImage())
                                     .build()
                     );
         }
@@ -277,7 +278,7 @@ public class CropServiceImpl implements CropService {
     private CropDto.PastUglyRes getCropsPastPrice(CropDto.predictionReq comparisonPriceReq) {
         return restTemplate.getForEntity(
                 fastApiBaseUrl + "/pyapi/past_ugly/{grain_id}",
-                CropDto.PastUglyRes.class, cropRepository.findByCropKorName(comparisonPriceReq.getCropName()).getCropId()
+                CropDto.PastUglyRes.class, cropRepository.findByCropEngName(comparisonPriceReq.getCropName()).getCropId()
         ).getBody();
     }
 
@@ -318,7 +319,7 @@ public class CropServiceImpl implements CropService {
 
     //  issue는 매주 월 9시에 실행되어서 DB에 저장됨.
     private String getCropIssueByAI(String cropName) {
-        return cropSummaryRepository.findByCropId(cropRepository.findByCropKorName(cropName).getCropId()).getSummary().describeConstable().orElseThrow(() -> new NotFoundException(cropName + "에 대한 이슈가 아직 등록되지 않았습니다. (chat GPT 재확인)"));
+        return cropSummaryRepository.findByCropId(cropRepository.findByCropEngName(cropName).getCropId()).getSummary().describeConstable().orElseThrow(() -> new NotFoundException(cropName + "에 대한 이슈가 아직 등록되지 않았습니다. (chat GPT 재확인)"));
     }
 
     private List<CropDto.futurePredictionRes> fetchFuturePredictions(Integer cropId) {
@@ -361,7 +362,7 @@ public class CropServiceImpl implements CropService {
 
 
     private Integer getCropIdByName(String cropName) {
-        return cropRepository.findByCropKorName(cropName).getCropId().describeConstable().orElseThrow(() -> new NotFoundException(cropName + "은 없는 작물입니다."));
+        return cropRepository.findByCropEngName(cropName).getCropId().describeConstable().orElseThrow(() -> new NotFoundException(cropName + "은 없는 작물입니다."));
     }
 
     private List<CropDto.retailPrice> extractRetailPrices(List<CropDto.PastUgly> data, int limit) {

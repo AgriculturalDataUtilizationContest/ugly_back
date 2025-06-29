@@ -1,5 +1,7 @@
 package com.reactivespring.agriculture_contest.config;
 
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,16 +12,22 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
+@RequiredArgsConstructor
 public class CorsFilterConfiguration {
-    @Value("${cors.allowed-origins}")
-    private List<String> allowedOrigins;
+
+    private final CorsProperties cors;
+
+    @PostConstruct
+    public void init() {
+        System.out.println("🚨 CORS 허용 origin 목록: " + cors.getAllowedOrigins());
+    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(allowedOrigins);
+        config.setAllowedOrigins(cors.getAllowedOrigins());
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("Authorization", "Refresh-Token", "Content-Type", "Accept"));
         config.setExposedHeaders(List.of("Authorization","Refresh-Token"));
@@ -30,3 +38,4 @@ public class CorsFilterConfiguration {
         return source;
     }
 }
+

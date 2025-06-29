@@ -66,6 +66,7 @@ public class CropDto {
     @Setter
     @Schema(description = "Base 들어올 때의 Res DTO의 내부 속한 것들")
     public static class OtherCrop {
+        public String cropsImage;
         public String cropEngName;
         public String cropKorName;
         public Double cropCost;

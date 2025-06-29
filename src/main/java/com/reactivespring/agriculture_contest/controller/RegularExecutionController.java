@@ -17,16 +17,24 @@ public class RegularExecutionController {
         this.regularExecutionService = regularExecutionService;
     }
 
-    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     @GetMapping("/update/kamis/data")
     public ResponseEntity<Void> updateKamisData() {
         return ResponseEntity.ok(regularExecutionService.updateKamisData());
     }
 
-    @Scheduled(cron = "0 25 0 * * *", zone = "Asia/Seoul")
     @GetMapping("/update/pred/data")
     public ResponseEntity<Void> updatePredData() {
         return ResponseEntity.ok(regularExecutionService.updatePredData());
+    }
+
+    @Scheduled(cron = "0 5 15 * * *", zone = "Asia/Seoul")
+    public void scheduledUpdateKamisData() {
+        regularExecutionService.updateKamisData();
+    }
+
+    @Scheduled(cron = "0 35 15 * * *", zone = "Asia/Seoul")
+    public void scheduledUpdatePredData() {
+        regularExecutionService.updatePredData();
     }
 
 }
