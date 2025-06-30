@@ -303,7 +303,7 @@ public class CropServiceImpl implements CropService {
     private List<String> getNews(String cropName) {
         List<String> newsList = new ArrayList<>();
 
-        NaverClient.NaverSearchResponse resp = naverClient.searchNews(cropName, 10, 1, "date");
+        NaverClient.NaverSearchResponse resp = naverClient.searchNews(cropName + " \"농작물\"", 10, 1, "date");
 
         newsList = resp.getItems().stream()
                 .map(NaverClient.NaverSearchResponse.Item::getOriginallink)

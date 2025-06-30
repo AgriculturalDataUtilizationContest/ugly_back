@@ -21,29 +21,36 @@ public class ChatServiceImpl implements ChatService {
     private final CropSummaryRepository repository;
     private final CropRepository cropRepository;
 
+    // transaction으로 바꿔야함..
     @Override
     public void askAndSave(List<String> cropLst) {
         for (String crop : cropLst) {
             try {
-                // set prompt
+                // cropId 가져오기
+                Integer cropId = cropRepository.findByCropKorName(crop).getCropId();
+
+                // 기존 요약이 존재하는지 확인
+                TbCropSummary existing = repository.findByCropId(cropId);
+                if (existing == null) {
+                    log.info("요약이 존재하지 않으므로 저장하지 않음: crop={}", crop);
+                    continue;  // 존재하지 않으면 무시
+                }
+
+                // 프롬프트 구성
                 String prompt = LocalDate.now()
                         + " 기준으로 한국 농산물 중 " + crop
                         + "와 관련된 유통 구조 변화에 대해 요약해줘. 직거래, 산지 직송, 도매시장 등 중심으로."
                         + "토큰수가 250정도 다다르면, 그 문장을 마지막으로 마무리해줘! (중간에 문장이 끊기지 않도록!)";
 
-                // connect GPT API
+                // GPT 호출
                 String content = chatClient.prompt()
                         .user(prompt)
                         .call()
-                        .content();  // response content
+                        .content();
 
-                // save to database
-                TbCropSummary summary = TbCropSummary.builder()
-                        .cropId(cropRepository.findByCropEngName(crop).getCropId())
-                        .summary(content)
-                        .build();
-
-                repository.save(summary);
+                // 기존 객체에 값만 수정
+                existing.setSummary(content);
+                repository.save(existing);  // 변경 내용 저장
             } catch (Exception e) {
                 log.error("GPT 요청 실패 crop={}", crop, e);
             }

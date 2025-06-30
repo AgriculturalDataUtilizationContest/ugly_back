@@ -27,14 +27,14 @@ public class RegularExecutionController {
         return ResponseEntity.ok(regularExecutionService.updatePredData());
     }
 
-    @Scheduled(cron = "0 5 15 * * *", zone = "Asia/Seoul")
-    public void scheduledUpdateKamisData() {
-        regularExecutionService.updateKamisData();
-    }
-
-    @Scheduled(cron = "0 35 15 * * *", zone = "Asia/Seoul")
-    public void scheduledUpdatePredData() {
-        regularExecutionService.updatePredData();
-    }
+//    @Scheduled(cron = "0 5 15 * * *", zone = "Asia/Seoul")
+//    public void scheduledUpdateKamisData() {
+//        regularExecutionService.updateKamisData();
+//    }
+//
+//    @Scheduled(cron = "0 35 15 * * *", zone = "Asia/Seoul")
+//    public void scheduledUpdatePredData() {
+//        regularExecutionService.updatePredData();
+//    }
 
 }

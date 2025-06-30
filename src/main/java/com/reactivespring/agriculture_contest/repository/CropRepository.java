@@ -9,4 +9,6 @@ public interface CropRepository extends JpaRepository<TbCrop, String> {
     TbCrop findByCropEngName(String cropName);
 
     TbCrop findByCropId(Integer grainId);
+
+    TbCrop findByCropKorName(String cropName);
 }

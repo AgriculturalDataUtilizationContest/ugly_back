@@ -15,6 +15,6 @@ public class TbCropSummary extends AuditingFields {
     public Integer cropId;
 
     @Column(columnDefinition = "TEXT")
-    private String summary;
+    @Setter private String summary;
 
 }
