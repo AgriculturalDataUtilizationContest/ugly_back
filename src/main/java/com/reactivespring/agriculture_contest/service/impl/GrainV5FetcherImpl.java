@@ -24,7 +24,7 @@ public class GrainV5FetcherImpl implements GrainV5Fetcher {
         return Flux.fromIterable(grainIds)
                 .flatMap(grain_id ->
                         webClient.get()
-                                .uri("/api/today_v5/{grainId}", grain_id)
+                                .uri("/pyapi/today_v5/{grainId}", grain_id)
                                 .retrieve()
                                 .bodyToMono(CropDto.V5Response.class)
                                 .map(res -> Map.entry(grain_id, res.getV5()))
