@@ -283,7 +283,8 @@ public class CropServiceImpl implements CropService {
     }
 
     private CropDto.recommendationRes getNaverRecommendation(String cropName) {
-        var resp = naverClient.searchShop(cropName);
+        String cropKorName = cropRepository.findByCropEngName(cropName).getCropKorName();
+        var resp = naverClient.searchShop(cropKorName + "못난이");
 
         List<CropDto.marketPlaceRes> markets = resp.getItems().stream()
                 .map(item -> CropDto.marketPlaceRes.builder()
